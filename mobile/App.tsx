@@ -52,6 +52,25 @@ export default function App() {
   const [events, setEvents] = useState<CareEvent[]>([]);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState('');
+  
+type WellbeingCheckin = {
+  id: string;
+  mood: number;
+  stress: number;
+  energy: number;
+  sleep_hours: number | null;
+  appetite: number | null;
+  created_at: string;
+};
+
+const [mood, setMood] = useState(3);
+const [stress, setStress] = useState(3);
+const [energy, setEnergy] = useState(3);
+const [appetite, setAppetite] = useState(3);
+const [sleepHours, setSleepHours] = useState('');
+const [checkins, setCheckins] = useState<WellbeingCheckin[]>([]);
+const [savingCheckin, setSavingCheckin] = useState(false);
+
 
   useEffect(() => {
     let alive = true;
@@ -149,6 +168,38 @@ export default function App() {
       alive = false;
     };
   }, [selectedBabyId, session?.user.id]);
+  
+  useEffect(() => {
+    if (!session?.user.id) {
+      setCheckins([]);
+      return;
+    }
+
+    let alive = true;
+
+    async function loadCheckins() {
+      const { data, error } = await supabase
+        .from('wellbeing_checkins')
+        .select('id, mood, stress, energy, sleep_hours, appetite, created_at')
+        .order('created_at', { ascending: false })
+        .limit(14);
+
+      if (!alive) return;
+
+      if (error) {
+        setStatus(error.message);
+      } else {
+        setCheckins((data ?? []) as WellbeingCheckin[]);
+      }
+    }
+
+    loadCheckins();
+
+    return () => {
+      alive = false;
+    };
+  }, [session?.user.id]);
+
 
   async function handleAuth() {
     setMessage('');
@@ -302,6 +353,57 @@ export default function App() {
     setEventDetails('');
     setStatus('Care event saved.');
   }
+
+  async function saveCheckin() {
+    if (!session) return;
+
+    const parsedSleep = sleepHours.trim() === ''
+      ? null
+      : Number(sleepHours);
+
+    if (
+      parsedSleep !== null &&
+      (!Number.isFinite(parsedSleep) ||
+        parsedSleep < 0 ||
+        parsedSleep > 24)
+    ) {
+      setStatus('Sleep must be between 0 and 24 hours.');
+      return;
+    }
+
+    setSavingCheckin(true);
+    setStatus('');
+
+    const { data, error } = await supabase
+      .from('wellbeing_checkins')
+      .insert({
+        parent_id: session.user.id,
+        mood,
+        stress,
+        energy,
+        appetite,
+        sleep_hours: parsedSleep,
+      })
+      .select(
+        'id, mood, stress, energy, sleep_hours, appetite, created_at'
+      )
+      .single();
+
+    setSavingCheckin(false);
+
+    if (error) {
+      setStatus(error.message);
+      return;
+    }
+
+    setCheckins((current) =>
+      [data as WellbeingCheckin, ...current].slice(0, 14)
+    );
+
+    setStatus('Your check-in has been saved.');
+    setSleepHours('');
+  }
+
 
   async function signOut() {
     const { error } = await supabase.auth.signOut();
@@ -529,6 +631,138 @@ export default function App() {
               </Text>
             </TouchableOpacity>
           </View>
+                    
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>How are you doing?</Text>
+
+            <Text style={styles.subtitle}>
+              Your wellbeing matters too. These check-ins are voluntary.
+            </Text>
+
+            {(
+              [
+                {
+                  key: 'mood',
+                  title: 'Mood',
+                  low: 'Very low',
+                  high: 'Very good',
+                  value: mood,
+                  set: setMood,
+                },
+                {
+                  key: 'stress',
+                  title: 'Stress',
+                  low: 'Very low',
+                  high: 'Very high',
+                  value: stress,
+                  set: setStress,
+                },
+                {
+                  key: 'energy',
+                  title: 'Energy',
+                  low: 'Exhausted',
+                  high: 'Very energetic',
+                  value: energy,
+                  set: setEnergy,
+                },
+                {
+                  key: 'appetite',
+                  title: 'Appetite',
+                  low: 'Very poor',
+                  high: 'Very good',
+                  value: appetite,
+                  set: setAppetite,
+                },
+              ] as const
+            ).map((item) => (
+              <View key={item.key} style={styles.ratingSection}>
+                <Text style={styles.ratingTitle}>{item.title}</Text>
+
+                <View style={styles.ratingRow}>
+                  {[1, 2, 3, 4, 5].map((value) => (
+                    <TouchableOpacity
+                      key={value}
+                      accessibilityRole="button"
+                      accessibilityLabel={`${item.title}, ${value} out of 5`}
+                      accessibilityState={{ selected: item.value === value }}
+                      style={[
+                        styles.ratingButton,
+                        item.value === value && styles.ratingSelected,
+                      ]}
+                      onPress={() => item.set(value)}
+                    >
+                      <Text
+                        style={[
+                          styles.ratingText,
+                          item.value === value && styles.ratingTextSelected,
+                        ]}
+                      >
+                        {value}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                <View style={styles.scaleLabels}>
+                  <Text style={styles.scaleLabel}>{item.low}</Text>
+                  <Text style={styles.scaleLabel}>{item.high}</Text>
+                </View>
+              </View>
+            ))}
+
+            <Text style={styles.ratingTitle}>Sleep in the last 24 hours</Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Hours slept, e.g. 5.5 (optional)"
+              value={sleepHours}
+              onChangeText={setSleepHours}
+              keyboardType="decimal-pad"
+            />
+
+            <TouchableOpacity
+              style={styles.button}
+              onPress={saveCheckin}
+              disabled={savingCheckin}
+            >
+              <Text style={styles.buttonText}>
+                {savingCheckin ? 'Saving...' : 'Save wellbeing check-in'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.sectionTitle}>Previous check-ins</Text>
+
+          {checkins.length === 0 ? (
+            <Text style={styles.empty}>
+              No check-ins yet. You can record one whenever you choose.
+            </Text>
+          ) : (
+            checkins.map((item) => (
+              <View key={item.id} style={styles.eventCard}>
+                <Text style={styles.eventTitle}>
+                  {new Date(item.created_at).toLocaleString()}
+                </Text>
+
+                <Text style={styles.eventNote}>
+                  Mood: {item.mood}/5 · Stress: {item.stress}/5
+                </Text>
+
+                <Text style={styles.eventNote}>
+                  Energy: {item.energy}/5 · Appetite:{' '}
+                  {item.appetite == null ? 'Not recorded' : `${item.appetite}/5`}
+                </Text>
+
+                <Text style={styles.eventNote}>
+                  Sleep:{' '}
+                  {item.sleep_hours == null
+                    ? 'Not recorded'
+                    : `${item.sleep_hours} hours`}
+                </Text>
+              </View>
+            ))
+          )}
+
 
           <Text style={styles.sectionTitle}>Recent care history</Text>
 
@@ -683,4 +917,49 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 25,
   },
+  ratingSection: {
+    marginBottom: 20,
+  },
+  ratingTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#263C33',
+    marginBottom: 10,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  ratingButton: {
+    flex: 1,
+    minHeight: 44,
+    borderWidth: 1,
+    borderColor: '#CAD7CD',
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  ratingSelected: {
+    backgroundColor: '#365B50',
+    borderColor: '#365B50',
+  },
+  ratingText: {
+    color: '#365B50',
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  ratingTextSelected: {
+    color: '#FFFFFF',
+  },
+  scaleLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 7,
+  },
+  scaleLabel: {
+    fontSize: 11,
+    color: '#68766D',
+  },
+
 });
