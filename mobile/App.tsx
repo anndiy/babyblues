@@ -24,6 +24,11 @@ type CareEvent = {
   event_type: 'feeding' | 'sleep' | 'diaper';
   logged_at: string;
   details: Record<string, unknown>;
+  feeding_type?: string | null;
+  amount_ml?: number | null;
+  sleep_started_at?: string | null;
+  sleep_ended_at?: string | null;
+  diaper_type?: string | null;
 };
 
 type EventType = CareEvent['event_type'];
@@ -53,6 +58,12 @@ export default function App() {
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState('');
   
+  const [feedingType, setFeedingType] = useState('breastfeeding');
+  const [amountMl, setAmountMl] = useState('');
+  const [sleepStart, setSleepStart] = useState('');
+  const [sleepEnd, setSleepEnd] = useState('');
+  const [diaperType, setDiaperType] = useState('wet');
+
 type WellbeingCheckin = {
   id: string;
   mood: number;
@@ -322,24 +333,60 @@ const [savingCheckin, setSavingCheckin] = useState(false);
 
   async function saveEvent() {
     if (!session || !selectedBabyId) {
-      setStatus('Create or select a baby profile first.');
+      setStatus('Select a baby profile first.');
       return;
     }
+
+    const amount = amountMl.trim() === '' ? null : Number(amountMl);
+    const duration = sleepStart.trim() === '' ? null : Number(sleepStart);
+
+    if (
+      eventType === 'feeding' &&
+      amount !== null &&
+      (!Number.isFinite(amount) || amount <= 0 || amount > 10000)
+    ) {
+      setStatus('Enter a valid feeding amount in ml.');
+      return;
+    }
+
+    if (
+      eventType === 'sleep' &&
+      (duration === null ||
+        !Number.isFinite(duration) ||
+        duration <= 0 ||
+        duration > 24)
+    ) {
+      setStatus('Enter a sleep duration between 0 and 24 hours.');
+      return;
+    }
+
+    const now = new Date();
+    const sleepEnd = now.toISOString();
+    const sleepStarted = duration === null
+      ? null
+      : new Date(now.getTime() - duration * 3600000).toISOString();
 
     setSaving(true);
     setStatus('');
 
+    const payload = {
+      parent_id: session.user.id,
+      baby_id: selectedBabyId,
+      event_type: eventType,
+      details: eventDetails.trim()
+        ? { note: eventDetails.trim() }
+        : {},
+      feeding_type: eventType === 'feeding' ? feedingType : null,
+      amount_ml: eventType === 'feeding' ? amount : null,
+      sleep_started_at: eventType === 'sleep' ? sleepStarted : null,
+      sleep_ended_at: eventType === 'sleep' ? sleepEnd : null,
+      diaper_type: eventType === 'diaper' ? diaperType : null,
+    };
+
     const { data, error } = await supabase
       .from('care_logs')
-      .insert({
-        parent_id: session.user.id,
-        baby_id: selectedBabyId,
-        event_type: eventType,
-        details: eventDetails.trim()
-          ? { note: eventDetails.trim() }
-          : {},
-      })
-      .select('id, event_type, logged_at, details')
+      .insert(payload)
+      .select('id, event_type, logged_at, details, feeding_type, amount_ml, sleep_started_at, sleep_ended_at, diaper_type')
       .single();
 
     setSaving(false);
@@ -351,6 +398,8 @@ const [savingCheckin, setSavingCheckin] = useState(false);
 
     setEvents((current) => [data as CareEvent, ...current].slice(0, 30));
     setEventDetails('');
+    setAmountMl('');
+    setSleepStart('');
     setStatus('Care event saved.');
   }
 
@@ -607,6 +656,90 @@ const [savingCheckin, setSavingCheckin] = useState(false);
               ))}
             </View>
 
+      {eventType === 'feeding' && (
+        <>
+          <Text style={styles.ratingTitle}>Feeding type</Text>
+          <View style={styles.chipRow}>
+            {[
+              ['breastfeeding', 'Breastfeeding'],
+              ['expressed_milk', 'Expressed milk'],
+              ['formula', 'Formula'],
+              ['solids', 'Solids'],
+              ['other', 'Other'],
+            ].map(([value, label]) => (
+              <TouchableOpacity
+                key={value}
+                style={[
+                  styles.chip,
+                  feedingType === value && styles.chipSelected,
+                ]}
+                onPress={() => setFeedingType(value)}
+              >
+                <Text
+                  style={[
+                    styles.chipText,
+                    feedingType === value && styles.chipTextSelected,
+                  ]}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {feedingType !== 'breastfeeding' && (
+            <TextInput
+              style={styles.input}
+              placeholder="Amount in ml (optional)"
+              value={amountMl}
+              onChangeText={setAmountMl}
+              keyboardType="decimal-pad"
+            />
+          )}
+        </>
+      )}
+
+      {eventType === 'sleep' && (
+        <TextInput
+          style={styles.input}
+          placeholder="Sleep duration in hours, e.g. 1.5"
+          value={sleepStart}
+          onChangeText={setSleepStart}
+          keyboardType="decimal-pad"
+        />
+      )}
+
+      {eventType === 'diaper' && (
+        <>
+          <Text style={styles.ratingTitle}>Diaper type</Text>
+          <View style={styles.chipRow}>
+            {[
+              ['wet', 'Wet'],
+              ['dirty', 'Dirty'],
+              ['both', 'Both'],
+            ].map(([value, label]) => (
+              <TouchableOpacity
+                key={value}
+                style={[
+                  styles.chip,
+                  diaperType === value && styles.chipSelected,
+                ]}
+                onPress={() => setDiaperType(value)}
+              >
+                <Text
+                  style={[
+                    styles.chipText,
+                    diaperType === value && styles.chipTextSelected,
+                  ]}
+                >
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </>
+      )}
+
             <TextInput
               style={[styles.input, styles.multiline]}
               placeholder={
@@ -784,6 +917,30 @@ const [savingCheckin, setSavingCheckin] = useState(false);
                   <Text style={styles.eventTime}>
                     {new Date(event.logged_at).toLocaleString()}
                   </Text>
+                  {event.event_type === 'feeding' && (
+                    <Text style={styles.eventNote}>
+                      Type: {event.feeding_type ?? 'Not recorded'}
+                      {event.amount_ml != null ? ` · ${event.amount_ml} ml` : ''}
+                    </Text>
+                  )}
+
+                  {event.event_type === 'sleep' &&
+                    event.sleep_started_at &&
+                    event.sleep_ended_at && (
+                      <Text style={styles.eventNote}>
+                        Duration: {(
+                          (new Date(event.sleep_ended_at).getTime() -
+                            new Date(event.sleep_started_at).getTime()) /
+                          3600000
+                        ).toFixed(1)} hours
+                      </Text>
+                    )}
+
+                  {event.event_type === 'diaper' && (
+                    <Text style={styles.eventNote}>
+                      Type: {event.diaper_type ?? 'Not recorded'}
+                    </Text>
+                  )}
                 </View>
 
                 {typeof event.details?.note === 'string' &&
