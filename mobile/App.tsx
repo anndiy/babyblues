@@ -423,6 +423,21 @@ const [savingCheckin, setSavingCheckin] = useState(false);
     setSavingCheckin(true);
     setStatus('');
 
+     const sleepValue = sleepHours.trim() === ''
+      ? null
+      : Number(sleepHours);
+
+    if (
+      sleepValue !== null &&
+      (!Number.isFinite(sleepValue) || sleepValue < 0 || sleepValue > 24)
+    ) {
+      Alert.alert(
+        'Invalid sleep duration',
+        'Enter sleep between 0 and 24 hours, or leave it blank if unknown.',
+      );
+      return;
+    }
+
     const { data, error } = await supabase
       .from('wellbeing_checkins')
       .insert({
