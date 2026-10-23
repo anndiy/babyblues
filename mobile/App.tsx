@@ -31,8 +31,110 @@ type CareEvent = {
 };
 
 type EventType = CareEvent['event_type'];
+type DiscoverCategory = 'All' | 'For you' | 'Baby care' | 'Recovery';
+type DiscoverArticle = {
+  id: string;
+  category: Exclude<DiscoverCategory, 'All'>;
+  emoji: string;
+  title: string;
+  subtitle: string;
+  color: string;
+  readTime: string;
+  sections: { heading: string; body: string[] }[];
+  note?: string;
+};
 
 const EVENT_TYPES: EventType[] = ['feeding', 'sleep', 'diaper'];
+
+const DISCOVER_ARTICLES: DiscoverArticle[] = [
+  {
+    id: 'overwhelmed', category: 'For you', emoji: '🫶', title: 'When everything feels like a lot',
+    subtitle: 'A small plan for moments when you feel stretched thin.', color: '#F3EAF7', readTime: '3 min read',
+    sections: [
+      { heading: 'Make the next step smaller', body: [
+        'You do not have to solve the whole day right now. Pick one immediate need: drink some water, eat something simple, use the bathroom, or sit somewhere comfortable.',
+        'If the baby is in a safe place, it is okay to take a brief pause to collect yourself.'
+      ]},
+      { heading: 'Ask for a specific kind of help', body: [
+        'Try a clear request such as: “Could you hold the baby for 20 minutes while I shower?” or “Could you bring me something to eat?” Specific requests can be easier for someone to act on.',
+        'If help is available, you do not have to earn it by doing everything alone.'
+      ]},
+      { heading: 'Let “good enough” count', body: [
+        'Some days, feeding everyone, keeping the baby safe, and getting through the next hour is enough. Non-urgent chores can wait.'
+      ]}
+    ],
+    note: 'If feeling overwhelmed, anxious, low, or unlike yourself persists or interferes with daily life, contact a healthcare professional. If you think you may harm yourself or your baby, seek urgent help now and ask a trusted person to stay with you.'
+  },
+  {
+    id: 'breathing', category: 'For you', emoji: '🌬️', title: 'A two-minute pause',
+    subtitle: 'A gentle reset you can try without needing a perfect quiet moment.', color: '#EAF2E8', readTime: '2 min practice',
+    sections: [
+      { heading: 'Settle where you are', body: [
+        'Sit or stand in a supported position. Let your shoulders drop if that feels comfortable, and loosen your jaw.',
+        'You do not need to close your eyes. Keep them open if that feels better.'
+      ]},
+      { heading: 'Let your breathing be natural', body: [
+        'Notice one ordinary breath coming in and going out. If it feels comfortable, allow the exhale to be a little slower without forcing or holding your breath.',
+        'When your attention wanders, gently return it to the next breath. There is nothing to get right.'
+      ]},
+      { heading: 'Choose one next step', body: [
+        'Before you continue, ask yourself: “What would help me in the next ten minutes?” It might be food, a message to someone, a stretch, or simply carrying on slowly.'
+      ]}
+    ],
+    note: 'Stop the exercise if you feel dizzy, breathless, or uncomfortable. This is a brief coping practice, not a substitute for support when you need it.'
+  },
+  {
+    id: 'newborn-cues', category: 'Baby care', emoji: '🍼', title: 'Learning your baby’s cues',
+    subtitle: 'Look for patterns over time rather than expecting every moment to be predictable.', color: '#FBEDE2', readTime: '3 min read',
+    sections: [
+      { heading: 'Notice, respond, and learn', body: [
+        'Babies communicate through sounds, movements, facial expressions, and changes in alertness. One cue can mean different things in different situations.',
+        'You can pause to check common needs such as feeding, a nappy change, temperature, comfort, or tiredness. Over time, you may notice patterns that are particular to your baby.'
+      ]},
+      { heading: 'Keep notes simple', body: [
+        'If it helps, log feeds, sleep, and nappies in BabyBlues. Use the record as a memory aid for yourself or for a conversation with your child’s healthcare professional—not as a test you need to pass.',
+        'It is normal to need time and support while you learn what works for your family.'
+      ]},
+      { heading: 'When you are unsure', body: [
+        'For questions about feeding, weight gain, hydration, or symptoms, ask your paediatrician or another qualified healthcare professional for guidance specific to your baby.'
+      ]}
+    ]
+  },
+  {
+    id: 'rest', category: 'Recovery', emoji: '🌙', title: 'Rest when sleep comes in pieces',
+    subtitle: 'Small ways to protect recovery when long stretches of sleep are hard to find.', color: '#EAEFF8', readTime: '3 min read',
+    sections: [
+      { heading: 'Think in opportunities, not perfect routines', body: [
+        'If another trusted adult is available, discuss a practical handover or protected rest window. Even planning who is “on duty” can reduce the mental load.',
+        'If you cannot sleep when the opportunity appears, quiet rest may still be a useful pause. Avoid judging yourself for how quickly you fall asleep.'
+      ]},
+      { heading: 'Reduce the decisions around you', body: [
+        'Keep water, a snack, your charger, and other frequently used items where they are easy to reach. Prepare only what is safe to prepare ahead of time.',
+        'Consider postponing non-urgent tasks and letting visitors help with food, dishes, laundry, or errands rather than expecting yourself to host.'
+      ]},
+      { heading: 'Keep baby sleep safety separate', body: [
+        'When you are drowsy, put your baby in their own safe sleep space rather than risk falling asleep while holding them on a sofa or armchair. Follow current safe-sleep guidance from your healthcare provider or public-health authority.'
+      ]}
+    ],
+    note: 'If exhaustion feels unmanageable or you are worried about your recovery, speak with your healthcare professional.'
+  },
+  {
+    id: 'asking-help', category: 'Recovery', emoji: '🤲', title: 'Making a practical support plan',
+    subtitle: 'Turn “let me know if you need anything” into help you can actually use.', color: '#F8EDE7', readTime: '2 min read',
+    sections: [
+      { heading: 'List the tasks that drain you', body: [
+        'Think beyond baby care: meals, laundry, groceries, cleaning, transport, messages, and arranging appointments all take energy.'
+      ]},
+      { heading: 'Match a task to a person', body: [
+        'Ask one person to bring dinner on a particular day, another to pick up supplies, or someone you trust to sit with you while you make a call. Give a time and a clear task where possible.',
+        'If someone cannot help with one thing, you can ask whether another option would work.'
+      ]},
+      { heading: 'Include emotional support', body: [
+        'You might say, “I do not need advice right now; could you listen for ten minutes?” or “Can you check in with me tomorrow?” You are allowed to say what kind of support would help.'
+      ]}
+    ]
+  }
+];
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -81,6 +183,8 @@ const [checkins, setCheckins] = useState<WellbeingCheckin[]>([]);
 const [savingCheckin, setSavingCheckin] = useState(false);
 const [activeTab, setActiveTab] = useState<'space' | 'baby' | 'insights' | 'discover' | 'community'>('space');
 const [showCheckinForm, setShowCheckinForm] = useState(false);
+const [discoverCategory, setDiscoverCategory] = useState<DiscoverCategory>('All');
+const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -883,34 +987,71 @@ const [showCheckinForm, setShowCheckinForm] = useState(false);
     );
   };
 
-  const renderDiscover = () => (
-    <>
-      <Text style={styles.eyebrow}>A LITTLE KNOWLEDGE, A LITTLE COMFORT</Text>
-      <Text style={styles.pageTitle}>Discover 🌱</Text>
-      <Text style={styles.pageSubtitle}>Small, practical reads for the big changes that come with a new little person.</Text>
-      <View style={[styles.discoverCard, { backgroundColor: '#F3EAF7' }]}>
-        <Text style={styles.discoverEmoji}>🫶</Text>
-        <Text style={styles.discoverCategory}>FOR THE PARENT</Text>
-        <Text style={styles.discoverTitle}>When everything feels like a lot</Text>
-        <Text style={styles.bodyText}>A gentle reminder that asking for help is part of caring, too.</Text>
-        <Text style={styles.comingSoon}>Guides are coming in a future update</Text>
-      </View>
-      <View style={[styles.discoverCard, { backgroundColor: '#EAF2E8' }]}>
-        <Text style={styles.discoverEmoji}>🌬️</Text>
-        <Text style={styles.discoverCategory}>A TWO-MINUTE PAUSE</Text>
-        <Text style={styles.discoverTitle}>A simple breathing break</Text>
-        <Text style={styles.bodyText}>Find a comfortable position, relax your shoulders, and breathe gently at a pace that feels natural. Stop if it feels uncomfortable.</Text>
-        <Text style={styles.comingSoon}>More stress-management ideas coming soon</Text>
-      </View>
-      <View style={[styles.discoverCard, { backgroundColor: '#FBEDE2' }]}>
-        <Text style={styles.discoverEmoji}>🍼</Text>
-        <Text style={styles.discoverCategory}>NEW-PARENT NOTES</Text>
-        <Text style={styles.discoverTitle}>You’re learning as you go</Text>
-        <Text style={styles.bodyText}>There is no single perfect way to be a parent. Reliable, age-appropriate guidance can help you make decisions one step at a time.</Text>
-        <Text style={styles.comingSoon}>Parenting articles coming soon</Text>
-      </View>
-    </>
-  );
+  const renderDiscover = () => {
+    const selectedArticle = DISCOVER_ARTICLES.find((article) => article.id === selectedArticleId);
+    const visibleArticles = discoverCategory === 'All'
+      ? DISCOVER_ARTICLES
+      : DISCOVER_ARTICLES.filter((article) => article.category === discoverCategory);
+
+    if (selectedArticle) {
+      return (
+        <>
+          <TouchableOpacity style={styles.articleBackButton} onPress={() => setSelectedArticleId(null)}>
+            <Text style={styles.articleBackText}>‹  Back to Discover</Text>
+          </TouchableOpacity>
+          <View style={[styles.articleHero, { backgroundColor: selectedArticle.color }]}>
+            <Text style={styles.discoverEmoji}>{selectedArticle.emoji}</Text>
+            <Text style={styles.discoverCategory}>{selectedArticle.category.toUpperCase()} · {selectedArticle.readTime.toUpperCase()}</Text>
+            <Text style={styles.articleTitle}>{selectedArticle.title}</Text>
+            <Text style={styles.bodyText}>{selectedArticle.subtitle}</Text>
+          </View>
+          {selectedArticle.sections.map((section, index) => (
+            <View key={`${selectedArticle.id}-${index}`} style={styles.card}>
+              <Text style={styles.cardTitle}>{section.heading}</Text>
+              {section.body.map((paragraph, paragraphIndex) => (
+                <Text key={`${selectedArticle.id}-${index}-${paragraphIndex}`} style={styles.bodyText}>{paragraph}</Text>
+              ))}
+            </View>
+          ))}
+          {selectedArticle.note && (
+            <View style={styles.supportNote}>
+              <Text style={styles.supportNoteTitle}>A note on getting support</Text>
+              <Text style={styles.bodyText}>{selectedArticle.note}</Text>
+            </View>
+          )}
+          <TouchableOpacity style={styles.primaryButton} onPress={() => setSelectedArticleId(null)}>
+            <Text style={styles.primaryButtonText}>Back to all reads</Text>
+          </TouchableOpacity>
+          <Text style={styles.footer}>BabyBlues offers general information, not a diagnosis or a replacement for personalised medical advice.</Text>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Text style={styles.eyebrow}>A LITTLE KNOWLEDGE, A LITTLE COMFORT</Text>
+        <Text style={styles.pageTitle}>Discover 🌱</Text>
+        <Text style={styles.pageSubtitle}>Practical reads for the big changes that come with a new little person. Open any guide to read at your own pace.</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroller} contentContainerStyle={styles.chipRow}>
+          {(['All', 'For you', 'Baby care', 'Recovery'] as DiscoverCategory[]).map((category) => (
+            <TouchableOpacity key={category} style={[styles.chip, discoverCategory === category && styles.chipSelected]} onPress={() => setDiscoverCategory(category)}>
+              <Text style={[styles.chipText, discoverCategory === category && styles.chipTextSelected]}>{category}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        {visibleArticles.map((article) => (
+          <TouchableOpacity key={article.id} activeOpacity={0.82} style={[styles.discoverCard, { backgroundColor: article.color }]} onPress={() => setSelectedArticleId(article.id)}>
+            <Text style={styles.discoverEmoji}>{article.emoji}</Text>
+            <Text style={styles.discoverCategory}>{article.category.toUpperCase()} · {article.readTime.toUpperCase()}</Text>
+            <Text style={styles.discoverTitle}>{article.title}</Text>
+            <Text style={styles.bodyText}>{article.subtitle}</Text>
+            <Text style={styles.articleReadLink}>Read guide  →</Text>
+          </TouchableOpacity>
+        ))}
+        <Text style={styles.footer}>These short guides are general information, not a diagnosis or a replacement for personalised medical advice. For concerns about you or your baby, contact a qualified healthcare professional.</Text>
+      </>
+    );
+  };
 
   const renderCommunity = () => (
     <>
@@ -1072,6 +1213,14 @@ const styles = StyleSheet.create({
   insightStatLabel: { color: '#887A90', fontSize: 10, marginBottom: 5 },
   insightStatValue: { color: '#4F4358', fontSize: 15, fontWeight: '800' },
   discoverCard: { borderRadius: 22, padding: 19, marginBottom: 14 },
+  categoryScroller: { flexGrow: 0, marginBottom: 13 },
+  articleReadLink: { color: '#6F8370', fontSize: 12, fontWeight: '800', marginTop: 7 },
+  articleBackButton: { alignSelf: 'flex-start', paddingVertical: 9, paddingRight: 12, marginBottom: 10 },
+  articleBackText: { color: '#6F8370', fontWeight: '800', fontSize: 13 },
+  articleHero: { borderRadius: 22, padding: 20, marginBottom: 15 },
+  articleTitle: { color: '#49434D', fontSize: 24, fontWeight: '800', lineHeight: 30, marginBottom: 8 },
+  supportNote: { backgroundColor: '#FFF7EC', borderRadius: 18, borderWidth: 1, borderColor: '#F0DDC6', padding: 16, marginBottom: 14 },
+  supportNoteTitle: { color: '#785C43', fontWeight: '800', fontSize: 14, marginBottom: 8 },
   discoverEmoji: { fontSize: 28, marginBottom: 13 },
   discoverCategory: { color: '#8D779A', fontSize: 9, fontWeight: '800', letterSpacing: 1.5, marginBottom: 7 },
   discoverTitle: { color: '#49434D', fontSize: 18, fontWeight: '800', marginBottom: 8 },
