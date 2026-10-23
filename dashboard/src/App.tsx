@@ -1,10 +1,12 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { generateSupportSignals } from './lib/insights';
+import { evaluateWellbeingData } from './lib/evaluation';
 import {
   Activity,
   Baby,
   ClipboardList,
+  Download,
   HeartPulse,
   LogOut,
   RefreshCw,
@@ -211,6 +213,180 @@ function App() {
     () => generateSupportSignals(checkins),
     [checkins],
   );
+  const evaluation = useMemo(
+    () => evaluateWellbeingData(checkins),
+    [checkins],
+  );
+
+  function exportEvaluationCSV() {
+    const headers = [
+      'record_type',
+      'record_id',
+      'recorded_at',
+      'event_type',
+      'baby_profile',
+      'feeding_type',
+      'amount_ml',
+      'sleep_started_at',
+      'sleep_ended_at',
+      'diaper_type',
+      'mood',
+      'stress',
+      'energy',
+      'sleep_hours',
+      'appetite',
+      'evaluation_notes',
+    ];
+
+    const rows: (string | number | null)[][] = [];
+
+    const addRow = (
+      recordType: string,
+      recordId = '',
+      recordedAt = '',
+      eventType = '',
+      babyProfile = '',
+      feedingType: string | null = '',
+      amountMl: number | null = null,
+      sleepStartedAt: string | null = '',
+      sleepEndedAt: string | null = '',
+      diaperType: string | null = '',
+      mood: number | null = null,
+      stress: number | null = null,
+      energy: number | null = null,
+      sleepHours: number | null = null,
+      appetite: number | null = null,
+      notes = '',
+    ) => {
+      rows.push([
+        recordType,
+        recordId,
+        recordedAt,
+        eventType,
+        babyProfile,
+        feedingType,
+        amountMl,
+        sleepStartedAt,
+        sleepEndedAt,
+        diaperType,
+        mood,
+        stress,
+        energy,
+        sleepHours,
+        appetite,
+        notes,
+      ]);
+    };
+
+    // Export wellbeing check-ins.
+    for (const entry of checkins) {
+      addRow(
+        'wellbeing_checkin',
+        entry.id,
+        entry.created_at,
+        '',
+        '',
+        '',
+        null,
+        '',
+        '',
+        '',
+        entry.mood,
+        entry.stress,
+        entry.energy,
+        entry.sleep_hours,
+        entry.appetite,
+      );
+    }
+
+    // Export care logs.
+    for (const log of careLogs) {
+      addRow(
+        'care_log',
+        log.id,
+        log.logged_at,
+        log.event_type,
+        log.baby_id ? babyNames.get(log.baby_id) ?? 'Unknown profile' : '',
+        log.feeding_type,
+        log.amount_ml,
+        log.sleep_started_at,
+        log.sleep_ended_at,
+        log.diaper_type,
+      );
+    }
+
+    // Add a summary row for trend comparisons.
+    addRow(
+      'evaluation_summary',
+      '',
+      new Date().toISOString(),
+      '',
+      '',
+      '',
+      null,
+      '',
+      '',
+      '',
+      null,
+      null,
+      null,
+      null,
+      null,
+      `Recent records: ${evaluation.recentCount}; previous records: ${evaluation.previousCount}; mood change: ${evaluation.moodChange ?? 'insufficient data'}; stress change: ${evaluation.stressChange ?? 'insufficient data'}; energy change: ${evaluation.energyChange ?? 'insufficient data'}`,
+    );
+
+    // Include any data-quality findings.
+    for (const issue of evaluation.issues) {
+      addRow(
+        'data_quality_issue',
+        issue.id,
+        new Date().toISOString(),
+        '',
+        '',
+        '',
+        null,
+        '',
+        '',
+        '',
+        null,
+        null,
+        null,
+        null,
+        null,
+        issue.message,
+      );
+    }
+
+    const escapeCSV = (value: string | number | null) => {
+      if (value === null || value === undefined) return '';
+      const text = String(value);
+      return `"${text.replace(/"/g, '""')}"`;
+    };
+
+    const csv = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map((row) => row.map(escapeCSV).join(',')),
+    ].join('\r\n');
+
+    // UTF-8 BOM improves compatibility with spreadsheet software.
+    const blob = new Blob(['\uFEFF', csv], {
+      type: 'text/csv;charset=utf-8;',
+    });
+
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.download = `babyblues-evaluation-${new Date()
+      .toISOString()
+      .slice(0, 10)}.csv`;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
 
   const latestCheckin = checkins[0];
   console.log('Recent wellbeing check-ins:', checkins.slice(0, 3));
@@ -336,6 +512,13 @@ function App() {
           <button className="icon-button" onClick={() => void loadDashboard()} title="Refresh data">
             <RefreshCw size={16} />
           </button>
+          <button
+            className="signout-button"
+            onClick={exportEvaluationCSV}
+            disabled={loading}
+          >
+            <Download size={16} /> Export CSV
+          </button>
           <button className="signout-button" onClick={() => void handleSignOut()}>
             <LogOut size={16} /> Sign out
           </button>
@@ -417,6 +600,69 @@ function App() {
   </p>
 </section>
 
+<section className="panel support-panel">
+  <div className="panel-heading">
+    <div>
+      <h2>Data quality & trend comparison</h2>
+      <p>Recent three check-ins compared with the preceding three</p>
+    </div>
+    <span className="panel-tag">DATA REVIEW</span>
+  </div>
+
+  <div className="evaluation-grid">
+    <article className="evaluation-item">
+      <span>Recent records</span>
+      <strong>{evaluation.recentCount}</strong>
+    </article>
+    <article className="evaluation-item">
+      <span>Previous records</span>
+      <strong>{evaluation.previousCount}</strong>
+    </article>
+    <article className="evaluation-item">
+      <span>Mood change</span>
+      <strong>
+        {evaluation.moodChange === null
+          ? 'Not enough data'
+          : `${evaluation.moodChange > 0 ? '+' : ''}${evaluation.moodChange}`}
+      </strong>
+    </article>
+    <article className="evaluation-item">
+      <span>Stress change</span>
+      <strong>
+        {evaluation.stressChange === null
+          ? 'Not enough data'
+          : `${evaluation.stressChange > 0 ? '+' : ''}${evaluation.stressChange}`}
+      </strong>
+    </article>
+    <article className="evaluation-item">
+      <span>Energy change</span>
+      <strong>
+        {evaluation.energyChange === null
+          ? 'Not enough data'
+          : `${evaluation.energyChange > 0 ? '+' : ''}${evaluation.energyChange}`}
+      </strong>
+    </article>
+  </div>
+
+  <p className="chart-footnote">
+    Changes are recent averages minus previous averages. Positive values
+    do not always indicate improvement, particularly for stress.
+  </p>
+
+  <h3 className="quality-heading">Data-quality checks</h3>
+
+  {evaluation.issues.length === 0 ? (
+    <p className="quality-clear">
+      No out-of-range values detected by these checks.
+    </p>
+  ) : (
+    <ul className="quality-list">
+      {evaluation.issues.map((issue) => (
+        <li key={issue.id}>{issue.message}</li>
+      ))}
+    </ul>
+  )}
+</section>
 
       <section className="chart-grid">
         <article className="panel">

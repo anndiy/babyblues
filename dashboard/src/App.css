@@ -656,3 +656,47 @@ tbody tr:last-child td {
     grid-template-columns: 1fr;
   }
 }
+
+.evaluation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.evaluation-item {
+  padding: 15px;
+  border: 1px solid #ebe8f2;
+  border-radius: 10px;
+  background: #fcfbfe;
+}
+
+.evaluation-item span {
+  display: block;
+  margin-bottom: 9px;
+  color: #89869b;
+  font-size: 11px;
+}
+
+.evaluation-item strong {
+  color: #45415d;
+  font-size: 20px;
+}
+
+.quality-heading {
+  margin: 23px 0 10px;
+  font-size: 13px;
+}
+
+.quality-clear {
+  margin-bottom: 0;
+  color: #478a71;
+  font-size: 12px;
+}
+
+.quality-list {
+  margin: 0;
+  padding-left: 20px;
+  color: #a13f4c;
+  font-size: 12px;
+  line-height: 1.8;
+}
