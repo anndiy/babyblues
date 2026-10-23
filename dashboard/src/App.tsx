@@ -54,6 +54,9 @@ type Checkin = {
   created_at: string;
 };
 
+const localDateKey = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
 const formatDate = (value: string) =>
   new Date(value).toLocaleDateString('en-IN', {
     day: 'numeric',
@@ -173,7 +176,7 @@ function App() {
       day.setHours(0, 0, 0, 0);
 
       days.push({
-        date: day.toISOString().slice(0, 10),
+        date: localDateKey(day),
         label: day.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
         feeding: 0,
         sleep: 0,
@@ -183,7 +186,7 @@ function App() {
 
     for (const log of careLogs) {
       const date = new Date(log.logged_at);
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      const key = localDateKey(date);
       const day = days.find((item) => item.date === key);
       if (!day) continue;
 
@@ -389,8 +392,6 @@ function App() {
 
 
   const latestCheckin = checkins[0];
-  console.log('Recent wellbeing check-ins:', checkins.slice(0, 3));
-  console.log('Generated support signals:', supportSignals);
 
   async function handleAuth(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -509,7 +510,13 @@ function App() {
 
         <div className="topbar-actions">
           <span className="user-email">{session.user.email}</span>
-          <button className="icon-button" onClick={() => void loadDashboard()} title="Refresh data">
+          <button
+            className={`icon-button${loading ? ' is-loading' : ''}`}
+            onClick={() => void loadDashboard()}
+            title="Refresh data"
+            aria-label="Refresh dashboard data"
+            disabled={loading}
+          >
             <RefreshCw size={16} />
           </button>
           <button
@@ -681,9 +688,9 @@ function App() {
                 <XAxis dataKey="label" tickLine={false} axisLine={false} />
                 <YAxis allowDecimals={false} tickLine={false} axisLine={false} width={30} />
                 <Tooltip />
-                <Bar dataKey="feeding" name="Feeding" fill="#7c72d8" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="sleep" name="Sleep" fill="#64a7ce" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="diaper" name="Diaper" fill="#e6a47d" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="feeding" name="Feeding" fill="#a9bd98" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="sleep" name="Sleep" fill="#8eafb5" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="diaper" name="Diaper" fill="#c6a184" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -707,9 +714,9 @@ function App() {
                   <XAxis dataKey="date" tickLine={false} axisLine={false} />
                   <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tickLine={false} axisLine={false} width={30} />
                   <Tooltip />
-                  <Line type="monotone" dataKey="Mood" stroke="#7c72d8" strokeWidth={2.5} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="Stress" stroke="#e6a47d" strokeWidth={2.5} dot={{ r: 3 }} />
-                  <Line type="monotone" dataKey="Energy" stroke="#64a7ce" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="Mood" stroke="#a9bd98" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="Stress" stroke="#c6a184" strokeWidth={2.5} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="Energy" stroke="#8eafb5" strokeWidth={2.5} dot={{ r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
