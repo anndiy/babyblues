@@ -47,13 +47,6 @@ export function generateSupportSignals(
   const avgStress = average(recent.map((entry) => entry.stress));
   const avgEnergy = average(recent.map((entry) => entry.energy));
 
-  const sleepEntries = recent
-    .map((entry) => entry.sleep_hours)
-    .filter((hours): hours is number => hours !== null && hours >= 0);
-
-  const avgSleep = sleepEntries.length
-    ? average(sleepEntries)
-    : null;
 
   if (avgMood <= 2.5) {
     signals.push({
