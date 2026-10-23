@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -31,6 +32,17 @@ type CareEvent = {
 };
 
 type EventType = CareEvent['event_type'];
+type CommunityTopic = 'Daily life' | 'Postpartum' | 'Baby care' | 'Support';
+type CommunityPost = {
+  id: string;
+  author_id: string;
+  display_name: string;
+  topic: CommunityTopic;
+  body: string;
+  moderation_status: 'pending' | 'approved' | 'rejected';
+  created_at: string;
+};
+const COMMUNITY_TOPICS: CommunityTopic[] = ['Daily life', 'Postpartum', 'Baby care', 'Support'];
 type DiscoverCategory = 'All' | 'For you' | 'Baby care' | 'Recovery';
 type DiscoverArticle = {
   id: string;
@@ -185,6 +197,13 @@ const [activeTab, setActiveTab] = useState<'space' | 'baby' | 'insights' | 'disc
 const [showCheckinForm, setShowCheckinForm] = useState(false);
 const [discoverCategory, setDiscoverCategory] = useState<DiscoverCategory>('All');
 const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
+const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([]);
+const [communityLoading, setCommunityLoading] = useState(false);
+const [communityTopic, setCommunityTopic] = useState<CommunityTopic>('Support');
+const [communityDraft, setCommunityDraft] = useState('');
+const [communityNickname, setCommunityNickname] = useState('');
+const [communitySaving, setCommunitySaving] = useState(false);
+const [communityStatus, setCommunityStatus] = useState('');
 
 
   useEffect(() => {
@@ -314,6 +333,115 @@ const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
       alive = false;
     };
   }, [session?.user.id]);
+
+  useEffect(() => {
+    if (!session?.user.id) {
+      setCommunityPosts([]);
+      setCommunityNickname('');
+      return;
+    }
+
+    let alive = true;
+    setCommunityNickname((current) => current || `Parent${session.user.id.slice(-4).toUpperCase()}`);
+
+    async function loadCommunityPosts() {
+      setCommunityLoading(true);
+      const { data, error } = await supabase
+        .from('community_posts')
+        .select('id, author_id, display_name, topic, body, moderation_status, created_at')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (!alive) return;
+      if (error) {
+        setCommunityStatus('Community setup is not complete yet. Run the supplied community SQL setup in your Supabase project, then reload this tab.');
+      } else {
+        setCommunityPosts((data ?? []) as CommunityPost[]);
+      }
+      setCommunityLoading(false);
+    }
+
+    loadCommunityPosts();
+    return () => { alive = false; };
+  }, [session?.user.id]);
+
+  async function submitCommunityPost() {
+    if (!session?.user.id) return;
+    const body = communityDraft.trim();
+    const nickname = communityNickname.trim();
+    if (!body) {
+      setCommunityStatus('Write a little something before posting.');
+      return;
+    }
+    if (body.length > 600) {
+      setCommunityStatus('Keep posts to 600 characters or fewer.');
+      return;
+    }
+    if (!nickname || nickname.length > 24) {
+      setCommunityStatus('Choose a display name between 1 and 24 characters.');
+      return;
+    }
+
+    setCommunitySaving(true);
+    setCommunityStatus('');
+    const { data, error } = await supabase
+      .from('community_posts')
+      .insert({
+        author_id: session.user.id,
+        display_name: nickname,
+        topic: communityTopic,
+        body,
+      })
+      .select('id, author_id, display_name, topic, body, moderation_status, created_at')
+      .single();
+    setCommunitySaving(false);
+
+    if (error) {
+      setCommunityStatus('Could not submit your post. Check that the community SQL setup has been run, then try again.');
+      return;
+    }
+    setCommunityDraft('');
+    setCommunityPosts((current) => [data as CommunityPost, ...current.filter((post) => post.id !== data.id)]);
+    setCommunityStatus('Your post was submitted for review. It will appear to everyone after it is approved.');
+  }
+
+  async function reportCommunityPost(post: CommunityPost, reason: string) {
+    if (!session?.user.id) return;
+    const { error } = await supabase.from('community_reports').insert({
+      post_id: post.id,
+      reporter_id: session.user.id,
+      reason,
+    });
+    if (error) {
+      setCommunityStatus('Could not send the report. Please try again later.');
+    } else {
+      setCommunityStatus('Report submitted. Thank you for helping keep this space respectful.');
+    }
+  }
+
+  function confirmReportCommunityPost(post: CommunityPost) {
+    Alert.alert('Report this post', 'Choose the reason that best fits your concern.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Harmful or abusive', onPress: () => { void reportCommunityPost(post, 'Harmful or abusive'); } },
+      { text: 'Medical misinformation', onPress: () => { void reportCommunityPost(post, 'Medical misinformation'); } },
+      { text: 'Privacy concern', onPress: () => { void reportCommunityPost(post, 'Privacy concern'); } },
+    ]);
+  }
+
+  async function deleteCommunityPost(post: CommunityPost) {
+    Alert.alert('Delete your post?', 'This cannot be undone.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Delete', style: 'destructive', onPress: async () => {
+        const { error } = await supabase.from('community_posts').delete().eq('id', post.id);
+        if (error) {
+          setCommunityStatus('Could not delete the post. Please try again.');
+        } else {
+          setCommunityPosts((current) => current.filter((item) => item.id !== post.id));
+          setCommunityStatus('Your post was deleted.');
+        }
+      } },
+    ]);
+  }
 
 
   async function handleAuth() {
@@ -1053,24 +1181,101 @@ const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
     );
   };
 
-  const renderCommunity = () => (
-    <>
-      <Text style={styles.eyebrow}>YOU’RE NOT THE ONLY ONE</Text>
-      <Text style={styles.pageTitle}>Parent Corner 🤝</Text>
-      <Text style={styles.pageSubtitle}>A future space to share the small wins, the hard bits, and the things you wish someone had told you.</Text>
-      <View style={styles.communityHero}>
-        <Text style={styles.communityEmoji}>🌷</Text>
-        <Text style={styles.communityTitle}>A little more understanding, together.</Text>
-        <Text style={styles.bodyText}>Community features are still being built. When they arrive, they’ll be designed around respect, privacy and supportive conversations.</Text>
-      </View>
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>What we want this space to be</Text>
-        <Text style={styles.bodyText}>• A place to ask questions without shame.</Text>
-        <Text style={styles.bodyText}>• A place to share experiences, not compare journeys.</Text>
-        <Text style={styles.bodyText}>• A place with reporting and moderation to help keep people safe.</Text>
-      </View>
-    </>
-  );
+  const renderCommunity = () => {
+    const visiblePosts = communityPosts.filter((post) => post.moderation_status === 'approved' || post.author_id === session?.user.id);
+    return (
+      <>
+        <Text style={styles.eyebrow}>A SPACE TO BE HUMAN</Text>
+        <Text style={styles.pageTitle}>Parent Corner 🤝</Text>
+        <Text style={styles.pageSubtitle}>Small wins, hard days, and honest questions. Share only what you feel comfortable sharing.</Text>
+
+        <View style={styles.communityHero}>
+          <Text style={styles.communityEmoji}>🌷</Text>
+          <Text style={styles.communityTitle}>You don’t have to have it all figured out.</Text>
+          <Text style={styles.bodyText}>Posts are reviewed before they appear publicly. This is a peer-support space, not an emergency service or a source of personalised medical advice.</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Share with the community</Text>
+          <Text style={styles.fieldLabel}>DISPLAY NAME</Text>
+          <TextInput
+            style={styles.input}
+            value={communityNickname}
+            onChangeText={setCommunityNickname}
+            placeholder="e.g. QuietDaisy"
+            placeholderTextColor="#A49A93"
+            maxLength={24}
+            autoCapitalize="words"
+          />
+          <Text style={styles.smallText}>Use a nickname, not your full name. Your email address is not shown on posts.</Text>
+          <Text style={[styles.fieldLabel, { marginTop: 12 }]}>PICK A TOPIC</Text>
+          <View style={styles.chipRow}>
+            {COMMUNITY_TOPICS.map((topic) => (
+              <TouchableOpacity key={topic} style={[styles.chip, communityTopic === topic && styles.chipSelected]} onPress={() => setCommunityTopic(topic)}>
+                <Text style={[styles.chipText, communityTopic === topic && styles.chipTextSelected]}>{topic}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <TextInput
+            style={[styles.input, styles.multiline, { minHeight: 120 }]}
+            value={communityDraft}
+            onChangeText={setCommunityDraft}
+            placeholder="What would you like other parents to know?"
+            placeholderTextColor="#A49A93"
+            multiline
+            maxLength={600}
+            textAlignVertical="top"
+          />
+          <Text style={styles.smallText}>{communityDraft.length}/600 characters · Avoid sharing phone numbers, addresses, or identifying details about your child.</Text>
+          <TouchableOpacity style={[styles.primaryButton, communitySaving && { opacity: 0.65 }]} onPress={() => { void submitCommunityPost(); }} disabled={communitySaving}>
+            <Text style={styles.primaryButtonText}>{communitySaving ? 'Submitting…' : 'Submit for review'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.sectionHeaderRow}>
+          <Text style={styles.sectionTitle}>Community conversations</Text>
+          <Text style={styles.mutedText}>Recently shared</Text>
+        </View>
+        {communityLoading ? (
+          <View style={styles.emptyCard}><ActivityIndicator color="#718573" /><Text style={[styles.mutedText, { marginTop: 10 }]}>Loading conversations…</Text></View>
+        ) : visiblePosts.length === 0 ? (
+          <View style={styles.emptyCard}>
+            <Text style={styles.emptyEmoji}>💬</Text>
+            <Text style={styles.cardTitle}>A quiet start</Text>
+            <Text style={styles.mutedText}>Approved conversations will appear here. You can submit a post above; it will stay private to you until it has been reviewed.</Text>
+          </View>
+        ) : visiblePosts.map((post) => (
+          <View key={post.id} style={styles.communityPostCard}>
+            <View style={styles.communityPostHeader}>
+              <View style={styles.communityAvatar}><Text style={styles.communityAvatarText}>🌿</Text></View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.communityPostAuthor}>{post.display_name}</Text>
+                <Text style={styles.smallText}>{post.topic} · {new Date(post.created_at).toLocaleDateString()}</Text>
+              </View>
+              {post.moderation_status === 'pending' && post.author_id === session?.user.id && <View style={styles.pendingBadge}><Text style={styles.pendingBadgeText}>In review</Text></View>}
+            </View>
+            <Text style={styles.communityPostBody}>{post.body}</Text>
+            <View style={styles.communityPostActions}>
+              {post.author_id === session?.user.id ? (
+                <TouchableOpacity onPress={() => deleteCommunityPost(post)}><Text style={styles.communityActionText}>Delete post</Text></TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={() => confirmReportCommunityPost(post)}><Text style={styles.communityActionText}>Report</Text></TouchableOpacity>
+              )}
+            </View>
+          </View>
+        ))}
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>A few safety boundaries</Text>
+          <Text style={styles.bodyText}>• Share experiences, not diagnoses or instructions to change treatment.</Text>
+          <Text style={styles.bodyText}>• Don’t post personal contact details or identifying information about children.</Text>
+          <Text style={styles.bodyText}>• If you or your baby may be in immediate danger, contact local emergency services or a qualified professional rather than waiting for a community reply.</Text>
+        </View>
+        {!!communityStatus && <Text style={styles.status}>{communityStatus}</Text>}
+        <Text style={styles.footer}>Community posts require review before public display. Reports are recorded for review; a human moderation workflow must be maintained before this feature is opened to a wider audience.</Text>
+      </>
+    );
+  };
 
   const tabItems = [
     { key: 'space' as const, label: 'My Space', emoji: '🌿' },
@@ -1228,6 +1433,16 @@ const styles = StyleSheet.create({
   communityHero: { alignItems: 'center', backgroundColor: '#F6EDE7', borderRadius: 23, padding: 24, marginBottom: 15 },
   communityEmoji: { fontSize: 38, marginBottom: 13 },
   communityTitle: { textAlign: 'center', color: '#55484A', fontSize: 20, lineHeight: 27, fontWeight: '800', marginBottom: 10 },
+  communityPostCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#EFE8E1' },
+  communityPostHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
+  communityAvatar: { width: 39, height: 39, borderRadius: 14, backgroundColor: '#EAF2E8', alignItems: 'center', justifyContent: 'center' },
+  communityAvatarText: { fontSize: 20 },
+  communityPostAuthor: { color: '#4A554A', fontWeight: '800', fontSize: 13 },
+  communityPostBody: { color: '#645D58', fontSize: 14, lineHeight: 22 },
+  communityPostActions: { flexDirection: 'row', justifyContent: 'flex-end', marginTop: 13, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#F3EEE9' },
+  communityActionText: { color: '#8D6A62', fontSize: 12, fontWeight: '800', padding: 4 },
+  pendingBadge: { backgroundColor: '#FFF2DC', borderRadius: 9, paddingHorizontal: 8, paddingVertical: 5 },
+  pendingBadgeText: { color: '#89663D', fontSize: 10, fontWeight: '800' },
   tabBar: { flexDirection: 'row', backgroundColor: '#FFFDFB', borderTopWidth: 1, borderTopColor: '#EEE6DE', paddingTop: 8, paddingBottom: 12, paddingHorizontal: 4 },
   tabButton: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 51, gap: 3 },
   tabEmoji: { fontSize: 19, opacity: 0.75 },
