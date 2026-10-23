@@ -1128,12 +1128,23 @@ const [communityStatus, setCommunityStatus] = useState('');
   const renderInsights = () => {
     const latest = checkins[0];
     const previous = checkins[1];
+    const recent = checkins.slice(0, 7);
     const moodWord = (value: number) => moodOptions.find((option) => option.value === value)?.label ?? 'Not recorded';
+    const average = (values: Array<number | null | undefined>) => {
+      const valid = values.filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
+      return valid.length ? (valid.reduce((sum, value) => sum + value, 0) / valid.length).toFixed(1) : '—';
+    };
+    const avgMood = average(recent.map((item) => item.mood));
+    const avgStress = average(recent.map((item) => item.stress));
+    const avgEnergy = average(recent.map((item) => item.energy));
+    const moodDirection = recent.length >= 4
+      ? (recent.slice(0, 3).reduce((sum, item) => sum + item.mood, 0) / 3) - (recent.slice(3).reduce((sum, item) => sum + item.mood, 0) / recent.slice(3).length)
+      : 0;
     return (
       <>
         <Text style={styles.eyebrow}>YOUR JOURNEY, YOUR PACE</Text>
-        <Text style={styles.pageTitle}>My Reflections 💛</Text>
-        <Text style={styles.pageSubtitle}>A gentle look back at what you’ve shared with yourself. These are reflections, not grades.</Text>
+        <Text style={styles.pageTitle}>My Insights 💛</Text>
+        <Text style={styles.pageSubtitle}>A gentle look at the check-ins you chose to share. These patterns are for reflection—not diagnosis, prediction, or a score of how you are doing.</Text>
         <View style={styles.insightHero}>
           <Text style={styles.heroEyebrow}>YOUR LATEST CHECK-IN</Text>
           {latest ? (
@@ -1156,13 +1167,46 @@ const [communityStatus, setCommunityStatus] = useState('');
             </>
           )}
         </View>
-        {latest && previous && (
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Since your previous check-in</Text>
-            <Text style={styles.bodyText}>Mood: {latest.mood === previous.mood ? 'about the same' : latest.mood > previous.mood ? 'you rated it a little better' : 'you rated it a little harder'}.</Text>
-            <Text style={styles.bodyText}>Stress: {latest.stress === previous.stress ? 'about the same' : latest.stress > previous.stress ? 'you reported more stress' : 'you reported less stress'}.</Text>
-            <Text style={styles.smallText}>A small comparison between two moments, not a measure of your overall wellbeing.</Text>
-          </View>
+        {recent.length > 0 && (
+          <>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Your recent snapshot</Text>
+              <Text style={styles.mutedText}>Based on your latest {recent.length} check-in{recent.length === 1 ? '' : 's'}; this is a simple average, not a clinical measure.</Text>
+              <View style={styles.snapshotGrid}>
+                <View style={styles.snapshotTile}><Text style={styles.snapshotLabel}>Mood</Text><Text style={styles.snapshotValue}>{avgMood}<Text style={styles.snapshotDenom}> / 5</Text></Text></View>
+                <View style={styles.snapshotTile}><Text style={styles.snapshotLabel}>Stress</Text><Text style={styles.snapshotValue}>{avgStress}<Text style={styles.snapshotDenom}> / 5</Text></Text></View>
+                <View style={styles.snapshotTile}><Text style={styles.snapshotLabel}>Energy</Text><Text style={styles.snapshotValue}>{avgEnergy}<Text style={styles.snapshotDenom}> / 5</Text></Text></View>
+              </View>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Mood across recent check-ins</Text>
+              <Text style={styles.mutedText}>Each bar represents one check-in, shown from newest to oldest.</Text>
+              <View style={styles.trendChart}>
+                {recent.slice().reverse().map((item) => (
+                  <View key={item.id} style={styles.trendColumn}>
+                    <Text style={styles.trendValue}>{item.mood}/5</Text>
+                    <View style={styles.trendTrack}><View style={[styles.trendBar, { height: `${Math.max(12, (item.mood / 5) * 100)}%` }]} /></View>
+                    <Text style={styles.trendDate}>{new Date(item.created_at).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+            {latest && previous && (
+              <View style={styles.card}>
+                <Text style={styles.cardTitle}>Since your previous check-in</Text>
+                <Text style={styles.bodyText}>Mood: {latest.mood === previous.mood ? 'about the same' : latest.mood > previous.mood ? 'you rated it a little better' : 'you rated it a little harder'}.</Text>
+                <Text style={styles.bodyText}>Stress: {latest.stress === previous.stress ? 'about the same' : latest.stress > previous.stress ? 'you reported more stress' : 'you reported less stress'}.</Text>
+                <Text style={styles.smallText}>This compares two moments only. It does not explain why they changed.</Text>
+              </View>
+            )}
+            {recent.length >= 4 && (
+              <View style={styles.patternCard}>
+                <Text style={styles.patternTitle}>A gentle pattern to notice</Text>
+                <Text style={styles.bodyText}>{moodDirection > 0.35 ? 'Your three most recent mood ratings are higher on average than your older ratings in this small sample.' : moodDirection < -0.35 ? 'Your three most recent mood ratings are lower on average than your older ratings in this small sample.' : 'Your recent mood ratings are fairly similar across this small sample.'}</Text>
+                <Text style={styles.smallText}>Check-ins can be affected by sleep, support, health, and many other things. If you feel persistently low, overwhelmed, or worried, consider talking with a trusted person or healthcare professional—regardless of these numbers.</Text>
+              </View>
+            )}
+          </>
         )}
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Your recent check-ins</Text>
@@ -1524,6 +1568,19 @@ const styles = StyleSheet.create({
   insightStat: { flex: 1, backgroundColor: '#FBF8FC', borderRadius: 12, padding: 11 },
   insightStatLabel: { color: '#887A90', fontSize: 10, marginBottom: 5 },
   insightStatValue: { color: '#4F4358', fontSize: 15, fontWeight: '800' },
+  snapshotGrid: { flexDirection: 'row', gap: 8, marginTop: 14 },
+  snapshotTile: { flex: 1, backgroundColor: '#F7F4F0', borderRadius: 13, padding: 12 },
+  snapshotLabel: { color: '#8B8178', fontSize: 10, fontWeight: '700', marginBottom: 6 },
+  snapshotValue: { color: '#4A554A', fontSize: 21, fontWeight: '800' },
+  snapshotDenom: { color: '#9A9188', fontSize: 11, fontWeight: '600' },
+  trendChart: { height: 155, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around', gap: 6, marginTop: 18 },
+  trendColumn: { flex: 1, height: '100%', alignItems: 'center', justifyContent: 'flex-end' },
+  trendValue: { color: '#81788A', fontSize: 9, marginBottom: 5, fontWeight: '700' },
+  trendTrack: { height: 95, width: '72%', backgroundColor: '#F1EBF4', borderRadius: 8, justifyContent: 'flex-end', overflow: 'hidden' },
+  trendBar: { width: '100%', backgroundColor: '#A995BB', borderRadius: 7 },
+  trendDate: { color: '#9A9188', fontSize: 8, marginTop: 7, textAlign: 'center' },
+  patternCard: { backgroundColor: '#EEF3EA', borderRadius: 20, padding: 17, marginBottom: 15, borderWidth: 1, borderColor: '#E0E9DB' },
+  patternTitle: { color: '#4D654E', fontSize: 16, fontWeight: '800', marginBottom: 10 },
   discoverCard: { borderRadius: 22, padding: 19, marginBottom: 14 },
   categoryScroller: { flexGrow: 0, marginBottom: 13 },
   articleReadLink: { color: '#6F8370', fontSize: 12, fontWeight: '800', marginTop: 7 },
