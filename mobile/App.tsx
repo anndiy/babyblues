@@ -194,6 +194,41 @@ type WellbeingCheckin = {
   created_at: string;
 };
 
+type AIObservation = {
+  key: string;
+  title: string;
+  detail: string;
+  direction: 'improving' | 'worsening' | 'stable' | 'insufficient_data' | 'context_only';
+  currentAverage?: number | null;
+  previousAverage?: number | null;
+  change?: number | null;
+  currentCount?: number;
+  previousCount?: number;
+};
+
+type AIWellbeingAnalysis = {
+  generatedAt: string;
+  windowDays: number;
+  features: {
+    currentCheckinCount: number;
+    previousCheckinCount: number;
+    signals: AIObservation[];
+  };
+  interpretation: {
+    summary: string;
+    context: string;
+    nextSteps: string[];
+    disclaimer: string;
+  };
+  meta?: {
+    provider?: string;
+    providerError?: string | null;
+    comparisonEligible?: boolean;
+    notice?: string;
+  };
+};
+
+
 const [mood, setMood] = useState(3);
 const [stress, setStress] = useState(3);
 const [energy, setEnergy] = useState(3);
@@ -203,6 +238,13 @@ const [checkins, setCheckins] = useState<WellbeingCheckin[]>([]);
 const [savingCheckin, setSavingCheckin] = useState(false);
 const [activeTab, setActiveTab] = useState<'space' | 'baby' | 'insights' | 'discover' | 'community'>('space');
 const [showCheckinForm, setShowCheckinForm] = useState(false);
+const [aiSharingConsent, setAiSharingConsent] = useState(false);
+const [aiConsentLoading, setAiConsentLoading] = useState(false);
+const [aiConsentSetupReady, setAiConsentSetupReady] = useState(false);
+const [aiAnalysis, setAiAnalysis] = useState<AIWellbeingAnalysis | null>(null);
+const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
+const [aiAnalysisError, setAiAnalysisError] = useState('');
+
 const [discoverCategory, setDiscoverCategory] = useState<DiscoverCategory>('All');
 const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
 const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([]);
@@ -238,6 +280,44 @@ const [communityStatus, setCommunityStatus] = useState('');
       subscription.unsubscribe();
     };
   }, []);
+
+
+  useEffect(() => {
+    let alive = true;
+
+    if (!session?.user.id) {
+      setAiSharingConsent(false);
+      setAiConsentSetupReady(false);
+      setAiAnalysis(null);
+      setAiAnalysisError('');
+      return;
+    }
+
+    async function loadAISharingConsent() {
+      setAiConsentLoading(true);
+      const { data, error } = await supabase
+        .from('wellbeing_analysis_preferences')
+        .select('ai_sharing_enabled')
+        .eq('user_id', session!.user.id)
+        .maybeSingle();
+
+      if (!alive) return;
+
+      if (error) {
+        setAiSharingConsent(false);
+        setAiConsentSetupReady(false);
+        setAiAnalysisError('AI consent setup is not installed yet. Run the supplied BabyBlues AI consent SQL migration first.');
+      } else {
+        setAiSharingConsent(data?.ai_sharing_enabled === true);
+        setAiConsentSetupReady(true);
+        setAiAnalysisError('');
+      }
+      setAiConsentLoading(false);
+    }
+
+    loadAISharingConsent();
+    return () => { alive = false; };
+  }, [session?.user.id]);
 
   useEffect(() => {
     if (!session?.user.id) {
@@ -701,6 +781,73 @@ const [communityStatus, setCommunityStatus] = useState('');
     setStatus('Care event saved.');
   }
 
+
+  async function updateAISharingConsent(nextValue: boolean) {
+    if (!session) return;
+    setAiConsentLoading(true);
+    setAiAnalysisError('');
+
+    const { error } = await supabase
+      .from('wellbeing_analysis_preferences')
+      .upsert({
+        user_id: session.user.id,
+        ai_sharing_enabled: nextValue,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+
+    setAiConsentLoading(false);
+    if (error) {
+      setAiAnalysisError(`Could not save the AI-sharing choice: ${error.message}. Confirm that the supplied AI consent SQL migration has been run.`);
+      return;
+    }
+
+    setAiSharingConsent(nextValue);
+    setAiConsentSetupReady(true);
+    if (!nextValue) setAiAnalysis(null);
+    setStatus(nextValue
+      ? 'AI-assisted reflections enabled. You can request an analysis whenever you choose.'
+      : 'AI-assisted reflections disabled; the displayed AI result has been cleared.');
+  }
+
+  async function runAIAnalysis() {
+    if (!session) return;
+    if (!aiSharingConsent) {
+      Alert.alert(
+        'AI reflections are off',
+        'Choose to enable AI-assisted reflections before sending aggregate features to the AI service.'
+      );
+      return;
+    }
+
+    const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL?.replace(/\/$/, '');
+    if (!apiBaseUrl) {
+      setAiAnalysisError('Backend URL is missing. Set EXPO_PUBLIC_API_BASE_URL in the mobile project environment, then restart Expo.');
+      return;
+    }
+
+    setAiAnalysisLoading(true);
+    setAiAnalysisError('');
+    try {
+      const response = await fetch(`${apiBaseUrl}/api/analysis/wellbeing`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ windowDays: 28 }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload?.error || `Analysis request failed (${response.status}).`);
+      }
+      setAiAnalysis(payload as AIWellbeingAnalysis);
+    } catch (error) {
+      setAiAnalysisError(error instanceof Error ? error.message : 'Could not generate the reflection.');
+    } finally {
+      setAiAnalysisLoading(false);
+    }
+  }
+
   async function saveCheckin() {
     if (!session) return;
 
@@ -1145,6 +1292,64 @@ const [communityStatus, setCommunityStatus] = useState('');
         <Text style={styles.eyebrow}>YOUR JOURNEY, YOUR PACE</Text>
         <Text style={styles.pageTitle}>My Insights 💛</Text>
         <Text style={styles.pageSubtitle}>A gentle look at the check-ins you chose to share. These patterns are for reflection—not diagnosis, prediction, or a score of how you are doing.</Text>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>AI-assisted reflection (optional)</Text>
+          <Text style={styles.bodyText}>BabyBlues can compare aggregate patterns in your wellbeing check-ins over two 28-day periods, then ask an AI service to explain those observations. This is separate from the reflections already shown on this page.</Text>
+          <Text style={styles.smallText}>If enabled, aggregate features derived from your check-ins and app activity are sent to the BabyBlues backend and then to Google Gemini. Your name, email, private notes, and raw event history are not sent to Gemini. The output is experimental and is not a diagnosis, screening result, or validated prediction.</Text>
+          {aiConsentLoading ? (
+            <View style={styles.aiLoadingRow}>
+              <ActivityIndicator size="small" color="#4E6655" />
+              <Text style={styles.mutedText}>Loading your AI-sharing choice…</Text>
+            </View>
+          ) : !aiConsentSetupReady ? (
+            <Text style={styles.aiConsentTitle}>AI analysis is not configured yet. Run the supplied SQL migration before enabling external AI processing.</Text>
+          ) : !aiSharingConsent ? (
+            <>
+              <Text style={styles.aiConsentTitle}>External AI processing is currently off.</Text>
+              <TouchableOpacity style={styles.primaryButton} onPress={() => updateAISharingConsent(true)}>
+                <Text style={styles.primaryButtonText}>I agree — enable AI reflections</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <Text style={styles.aiConsentTitle}>AI-sharing is enabled. You can turn it off at any time.</Text>
+              <TouchableOpacity style={styles.primaryButton} onPress={runAIAnalysis} disabled={aiAnalysisLoading}>
+                <Text style={styles.primaryButtonText}>{aiAnalysisLoading ? 'Preparing your reflection…' : 'Generate AI-assisted reflection'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.quietButton} onPress={() => updateAISharingConsent(false)} disabled={aiAnalysisLoading}>
+                <Text style={styles.quietButtonText}>Turn off AI reflections and clear this result</Text>
+              </TouchableOpacity>
+            </>
+          )}
+          {!!aiAnalysisError && <Text style={styles.errorText}>{aiAnalysisError}</Text>}
+          {aiAnalysis && (
+            <View style={styles.aiResultCard}>
+              <Text style={styles.cardTitle}>Your AI-assisted reflection</Text>
+              <Text style={styles.bodyText}>{aiAnalysis.interpretation.summary}</Text>
+              {!!aiAnalysis.interpretation.context && <Text style={styles.bodyText}>{aiAnalysis.interpretation.context}</Text>}
+              <Text style={styles.aiSectionTitle}>Observed signals</Text>
+              {aiAnalysis.features.signals.map((signal) => (
+                <View key={signal.key} style={styles.aiSignalRow}>
+                  <Text style={styles.aiSignalTitle}>{signal.title}</Text>
+                  <Text style={styles.bodyText}>{signal.detail}</Text>
+                </View>
+              ))}
+              {aiAnalysis.interpretation.nextSteps?.length > 0 && (
+                <>
+                  <Text style={styles.aiSectionTitle}>Possible next steps</Text>
+                  {aiAnalysis.interpretation.nextSteps.map((step, index) => (
+                    <Text key={`${index}-${step}`} style={styles.bodyText}>• {step}</Text>
+                  ))}
+                </>
+              )}
+              <Text style={styles.smallText}>{aiAnalysis.interpretation.disclaimer}</Text>
+              <Text style={styles.smallText}>Generated {new Date(aiAnalysis.generatedAt).toLocaleString()} · {aiAnalysis.windowDays}-day comparison windows</Text>
+              {!!aiAnalysis.meta?.provider && <Text style={styles.smallText}>Analysis mode: {aiAnalysis.meta.provider}</Text>}
+            </View>
+          )}
+        </View>
+
         <View style={styles.insightHero}>
           <Text style={styles.heroEyebrow}>YOUR LATEST CHECK-IN</Text>
           {latest ? (
@@ -1631,4 +1836,12 @@ const styles = StyleSheet.create({
   scaleLabel: { fontSize: 10, color: '#948A94' },
   status: { color: '#8D6A62', backgroundColor: '#F8EDE7', padding: 12, borderRadius: 11, marginVertical: 12, lineHeight: 19, fontSize: 12 },
   footer: { color: '#AAA098', fontSize: 10, lineHeight: 16, textAlign: 'center', marginTop: 22, marginBottom: 10 },
+
+  aiConsentTitle: { color: '#4E6655', fontSize: 13, fontWeight: '700', marginTop: 10, marginBottom: 10 },
+  aiLoadingRow: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingVertical: 10 },
+  aiResultCard: { marginTop: 14, padding: 14, borderRadius: 16, backgroundColor: '#F8F5F0', borderWidth: 1, borderColor: '#E7DED4' },
+  aiSectionTitle: { marginTop: 12, marginBottom: 6, fontSize: 15, fontWeight: '700', color: '#536B55' },
+  aiSignalRow: { paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#DDD7CE' },
+  aiSignalTitle: { fontSize: 14, fontWeight: '700', color: '#4D5D4D', marginBottom: 3 },
+  errorText: { color: '#A4473D', marginTop: 8, fontSize: 13, lineHeight: 18 },
 });
