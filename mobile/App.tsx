@@ -42,6 +42,14 @@ type CommunityPost = {
   moderation_status: 'pending' | 'approved' | 'rejected';
   created_at: string;
 };
+type CommunityReport = {
+  id: string;
+  post_id: string;
+  reporter_id: string;
+  reason: string;
+  created_at: string;
+  post?: { id: string; display_name: string; body: string; moderation_status: 'pending' | 'approved' | 'rejected' } | null;
+};
 const COMMUNITY_TOPICS: CommunityTopic[] = ['Daily life', 'Postpartum', 'Baby care', 'Support'];
 type DiscoverCategory = 'All' | 'For you' | 'Baby care' | 'Recovery';
 type DiscoverArticle = {
@@ -199,6 +207,9 @@ const [discoverCategory, setDiscoverCategory] = useState<DiscoverCategory>('All'
 const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
 const [communityPosts, setCommunityPosts] = useState<CommunityPost[]>([]);
 const [communityLoading, setCommunityLoading] = useState(false);
+const [isCommunityModerator, setIsCommunityModerator] = useState(false);
+const [moderationReports, setModerationReports] = useState<CommunityReport[]>([]);
+const [moderationBusyId, setModerationBusyId] = useState<string | null>(null);
 const [communityTopic, setCommunityTopic] = useState<CommunityTopic>('Support');
 const [communityDraft, setCommunityDraft] = useState('');
 const [communityNickname, setCommunityNickname] = useState('');
@@ -338,32 +349,87 @@ const [communityStatus, setCommunityStatus] = useState('');
     if (!session?.user.id) {
       setCommunityPosts([]);
       setCommunityNickname('');
+      setIsCommunityModerator(false);
+      setModerationReports([]);
       return;
     }
 
     let alive = true;
     setCommunityNickname((current) => current || `Parent${session.user.id.slice(-4).toUpperCase()}`);
 
-    async function loadCommunityPosts() {
+    async function loadCommunityData() {
       setCommunityLoading(true);
+      const { data: moderatorRow, error: moderatorError } = await supabase
+        .from('community_moderators')
+        .select('user_id')
+        .eq('user_id', session!.user.id)
+        .maybeSingle();
+      if (!alive) return;
+      const moderator = !moderatorError && !!moderatorRow;
+      setIsCommunityModerator(moderator);
+
       const { data, error } = await supabase
         .from('community_posts')
         .select('id, author_id, display_name, topic, body, moderation_status, created_at')
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(100);
 
       if (!alive) return;
       if (error) {
-        setCommunityStatus('Community setup is not complete yet. Run the supplied community SQL setup in your Supabase project, then reload this tab.');
+        setCommunityStatus('Community setup is not complete yet. Run the latest community SQL setup in Supabase, then reload this tab.');
       } else {
         setCommunityPosts((data ?? []) as CommunityPost[]);
+      }
+
+      if (moderator) {
+        const { data: reports, error: reportsError } = await supabase
+          .from('community_reports')
+          .select('id, post_id, reporter_id, reason, created_at, post:community_posts(id, display_name, body, moderation_status)')
+          .order('created_at', { ascending: true })
+          .limit(100);
+        if (!alive) return;
+        if (!reportsError) setModerationReports((reports ?? []) as unknown as CommunityReport[]);
+        else setCommunityStatus('Moderator access is active, but reports could not be loaded. Check the latest SQL policies.');
+      } else {
+        setModerationReports([]);
       }
       setCommunityLoading(false);
     }
 
-    loadCommunityPosts();
+    void loadCommunityData();
     return () => { alive = false; };
   }, [session?.user.id]);
+
+  async function moderateCommunityPost(post: CommunityPost, nextStatus: 'approved' | 'rejected') {
+    if (!isCommunityModerator) {
+      setCommunityStatus('You do not have moderator access.');
+      return;
+    }
+    setModerationBusyId(post.id);
+    const { error } = await supabase
+      .from('community_posts')
+      .update({ moderation_status: nextStatus })
+      .eq('id', post.id);
+    setModerationBusyId(null);
+    if (error) {
+      setCommunityStatus('Could not update this post. Confirm the moderator SQL migration has been run.');
+      return;
+    }
+    setCommunityPosts((current) => current.map((item) => item.id === post.id ? { ...item, moderation_status: nextStatus } : item));
+    setModerationReports((current) => current.map((report) => report.post_id === post.id && report.post ? { ...report, post: { ...report.post, moderation_status: nextStatus } } : report));
+    setCommunityStatus(nextStatus === 'approved' ? 'Post approved and visible to the community.' : 'Post rejected and hidden from the community.');
+  }
+
+  function confirmModerateCommunityPost(post: CommunityPost, nextStatus: 'approved' | 'rejected') {
+    Alert.alert(
+      nextStatus === 'approved' ? 'Approve this post?' : 'Reject this post?',
+      nextStatus === 'approved' ? 'This post will become visible to all community members.' : 'This post will remain hidden from other community members.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: nextStatus === 'approved' ? 'Approve' : 'Reject', style: nextStatus === 'rejected' ? 'destructive' : 'default', onPress: () => { void moderateCommunityPost(post, nextStatus); } },
+      ],
+    );
+  }
 
   async function submitCommunityPost() {
     if (!session?.user.id) return;
@@ -1182,12 +1248,53 @@ const [communityStatus, setCommunityStatus] = useState('');
   };
 
   const renderCommunity = () => {
-    const visiblePosts = communityPosts.filter((post) => post.moderation_status === 'approved' || post.author_id === session?.user.id);
+    const visiblePosts = communityPosts.filter((post) => isCommunityModerator || post.moderation_status === 'approved' || post.author_id === session?.user.id);
+    const pendingPosts = communityPosts.filter((post) => post.moderation_status === 'pending');
     return (
       <>
         <Text style={styles.eyebrow}>A SPACE TO BE HUMAN</Text>
         <Text style={styles.pageTitle}>Parent Corner 🤝</Text>
         <Text style={styles.pageSubtitle}>Small wins, hard days, and honest questions. Share only what you feel comfortable sharing.</Text>
+
+        {isCommunityModerator && (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Moderator workspace</Text>
+            <Text style={styles.smallText}>Moderator access is enabled for this account. Review pending posts and reported content. Approvals are visible to community members.</Text>
+            <Text style={[styles.sectionTitle, { marginTop: 14 }]}>Pending posts ({pendingPosts.length})</Text>
+            {pendingPosts.length === 0 ? (
+              <Text style={styles.mutedText}>No posts are waiting for approval.</Text>
+            ) : pendingPosts.map((post) => (
+              <View key={`pending-${post.id}`} style={styles.moderationItem}>
+                <Text style={styles.communityPostAuthor}>{post.display_name} · {post.topic}</Text>
+                <Text style={styles.communityPostBody}>{post.body}</Text>
+                <View style={styles.moderationActions}>
+                  <TouchableOpacity style={styles.moderationApprove} disabled={moderationBusyId === post.id} onPress={() => confirmModerateCommunityPost(post, 'approved')}>
+                    <Text style={styles.moderationApproveText}>{moderationBusyId === post.id ? 'Saving…' : 'Approve'}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.moderationReject} disabled={moderationBusyId === post.id} onPress={() => confirmModerateCommunityPost(post, 'rejected')}>
+                    <Text style={styles.moderationRejectText}>Reject</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ))}
+            <Text style={[styles.sectionTitle, { marginTop: 16 }]}>Reported posts ({moderationReports.length})</Text>
+            {moderationReports.length === 0 ? (
+              <Text style={styles.mutedText}>No reports have been submitted.</Text>
+            ) : moderationReports.map((report) => (
+              <View key={`report-${report.id}`} style={styles.moderationItem}>
+                <Text style={styles.communityPostAuthor}>{report.reason}</Text>
+                <Text style={styles.smallText}>Reported {new Date(report.created_at).toLocaleDateString()} · Post status: {report.post?.moderation_status ?? 'post unavailable'}</Text>
+                <Text style={styles.communityPostBody}>{report.post?.body ?? 'The reported post is no longer available.'}</Text>
+                {report.post && report.post.moderation_status !== 'rejected' && (
+                  <View style={styles.moderationActions}>
+                    {report.post.moderation_status !== 'approved' && <TouchableOpacity style={styles.moderationApprove} disabled={moderationBusyId === report.post_id} onPress={() => { const post = communityPosts.find((item) => item.id === report.post_id); if (post) confirmModerateCommunityPost(post, 'approved'); }}><Text style={styles.moderationApproveText}>Approve post</Text></TouchableOpacity>}
+                    <TouchableOpacity style={styles.moderationReject} disabled={moderationBusyId === report.post_id} onPress={() => { const post = communityPosts.find((item) => item.id === report.post_id); if (post) confirmModerateCommunityPost(post, 'rejected'); }}><Text style={styles.moderationRejectText}>Reject post</Text></TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
 
         <View style={styles.communityHero}>
           <Text style={styles.communityEmoji}>🌷</Text>
@@ -1430,6 +1537,12 @@ const styles = StyleSheet.create({
   discoverCategory: { color: '#8D779A', fontSize: 9, fontWeight: '800', letterSpacing: 1.5, marginBottom: 7 },
   discoverTitle: { color: '#49434D', fontSize: 18, fontWeight: '800', marginBottom: 8 },
   comingSoon: { color: '#8B7D86', fontSize: 10, marginTop: 8, fontStyle: 'italic' },
+  moderationItem: { backgroundColor: '#FAF7F3', borderRadius: 13, padding: 12, marginTop: 9, borderWidth: 1, borderColor: '#EEE5DC' },
+  moderationActions: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 10 },
+  moderationApprove: { backgroundColor: '#EAF2E8', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 9 },
+  moderationApproveText: { color: '#4D6A50', fontWeight: '800', fontSize: 12 },
+  moderationReject: { backgroundColor: '#F9E9E6', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 9 },
+  moderationRejectText: { color: '#9A514A', fontWeight: '800', fontSize: 12 },
   communityHero: { alignItems: 'center', backgroundColor: '#F6EDE7', borderRadius: 23, padding: 24, marginBottom: 15 },
   communityEmoji: { fontSize: 38, marginBottom: 13 },
   communityTitle: { textAlign: 'center', color: '#55484A', fontSize: 20, lineHeight: 27, fontWeight: '800', marginBottom: 10 },
