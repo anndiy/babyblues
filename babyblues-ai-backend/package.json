@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "test": "node --test"
+    "test": "node --test",
+    "demo:generate": "node scripts/generate-demo-fixture.js",
+    "demo:seed": "node scripts/seed-demo-data.js"
   },
   "engines": {
     "node": ">=20"

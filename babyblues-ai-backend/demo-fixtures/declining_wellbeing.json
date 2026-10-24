@@ -1,0 +1,3276 @@
+{
+  "metadata": {
+    "generated": true,
+    "scenario": "declining_wellbeing",
+    "title": "Changing self-reported wellbeing",
+    "description": "Self-reported measures trend less favourably in the recent window. This is not a diagnosis.",
+    "seed": 42,
+    "generatedAt": "2026-10-23T18:30:33.495Z",
+    "historyDays": 56,
+    "parentId": "SYNTHETIC_PARENT_ID",
+    "babyId": "SYNTHETIC_BABY_ID",
+    "counts": {
+      "babies": 1,
+      "careLogs": 216,
+      "wellbeingCheckins": 28
+    },
+    "disclaimer": "Entirely synthetic software-test data. Not real people, clinical evidence, or a validated prediction."
+  },
+  "baby": {
+    "parent_id": "SYNTHETIC_PARENT_ID",
+    "display_name": "Demo Baby — Changing Pattern",
+    "date_of_birth": "2026-08-14"
+  },
+  "careLogs": [
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-08-29T03:30:57.715Z",
+      "details": {
+        "note": "Synthetic demo record 1"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-08-29T05:02:04.933Z",
+      "details": {
+        "note": "Synthetic demo record 4"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-08-29T10:57:31.133Z",
+      "details": {
+        "note": "Synthetic demo record 2"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-08-29T12:38:05.599Z",
+      "details": {
+        "note": "Synthetic demo record 3"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-08-30T13:21:39.049Z",
+      "details": {
+        "note": "Synthetic demo record 5"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-08-30T19:42:48.981Z",
+      "details": {
+        "note": "Synthetic demo record 6"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 123,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-08-30T20:16:41.608Z",
+      "details": {
+        "note": "Synthetic demo record 7"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 111,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-08-31T06:06:38.412Z",
+      "details": {
+        "note": "Synthetic demo record 10"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-08-31T04:48:38.412Z",
+      "sleep_ended_at": "2026-08-31T06:06:38.412Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-08-31T07:00:15.814Z",
+      "details": {
+        "note": "Synthetic demo record 9"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 136,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-08-31T18:30:23.571Z",
+      "details": {
+        "note": "Synthetic demo record 8"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-01T04:49:33.146Z",
+      "details": {
+        "note": "Synthetic demo record 11"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 83,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-01T05:50:24.480Z",
+      "details": {
+        "note": "Synthetic demo record 14"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-01T03:08:24.480Z",
+      "sleep_ended_at": "2026-09-01T05:50:24.480Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-01T06:57:42.298Z",
+      "details": {
+        "note": "Synthetic demo record 13"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-01T05:15:42.298Z",
+      "sleep_ended_at": "2026-09-01T06:57:42.298Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-01T16:55:40.765Z",
+      "details": {
+        "note": "Synthetic demo record 12"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-02T03:31:31.000Z",
+      "details": {
+        "note": "Synthetic demo record 16"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-02T08:28:57.577Z",
+      "details": {
+        "note": "Synthetic demo record 18"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-02T09:47:17.744Z",
+      "details": {
+        "note": "Synthetic demo record 17"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 60,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-02T15:37:20.078Z",
+      "details": {
+        "note": "Synthetic demo record 19"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 110,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-02T16:19:28.596Z",
+      "details": {
+        "note": "Synthetic demo record 15"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 45,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-03T01:48:47.153Z",
+      "details": {
+        "note": "Synthetic demo record 22"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-03T00:00:47.153Z",
+      "sleep_ended_at": "2026-09-03T01:48:47.153Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-03T08:21:28.195Z",
+      "details": {
+        "note": "Synthetic demo record 24"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-03T07:45:28.195Z",
+      "sleep_ended_at": "2026-09-03T08:21:28.195Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-03T14:30:36.473Z",
+      "details": {
+        "note": "Synthetic demo record 20"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 64,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-03T22:12:29.346Z",
+      "details": {
+        "note": "Synthetic demo record 21"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-03T19:24:29.346Z",
+      "sleep_ended_at": "2026-09-03T22:12:29.346Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-03T22:55:45.568Z",
+      "details": {
+        "note": "Synthetic demo record 23"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-03T20:25:45.568Z",
+      "sleep_ended_at": "2026-09-03T22:55:45.568Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-04T02:35:54.138Z",
+      "details": {
+        "note": "Synthetic demo record 26"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-03T23:47:54.138Z",
+      "sleep_ended_at": "2026-09-04T02:35:54.138Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-04T15:51:34.947Z",
+      "details": {
+        "note": "Synthetic demo record 25"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 91,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-04T17:47:10.957Z",
+      "details": {
+        "note": "Synthetic demo record 27"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-04T18:19:16.821Z",
+      "details": {
+        "note": "Synthetic demo record 28"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-04T16:19:16.821Z",
+      "sleep_ended_at": "2026-09-04T18:19:16.821Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-05T04:11:58.192Z",
+      "details": {
+        "note": "Synthetic demo record 31"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 83,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-05T14:13:38.231Z",
+      "details": {
+        "note": "Synthetic demo record 30"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 47,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-05T17:27:47.582Z",
+      "details": {
+        "note": "Synthetic demo record 29"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-06T08:06:32.570Z",
+      "details": {
+        "note": "Synthetic demo record 35"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 92,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-06T08:58:25.434Z",
+      "details": {
+        "note": "Synthetic demo record 34"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-06T14:14:52.015Z",
+      "details": {
+        "note": "Synthetic demo record 33"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-06T18:15:52.260Z",
+      "details": {
+        "note": "Synthetic demo record 36"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 120,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-06T20:32:34.186Z",
+      "details": {
+        "note": "Synthetic demo record 37"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-06T18:44:34.186Z",
+      "sleep_ended_at": "2026-09-06T20:32:34.186Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-06T20:57:44.658Z",
+      "details": {
+        "note": "Synthetic demo record 32"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-06T18:33:44.658Z",
+      "sleep_ended_at": "2026-09-06T20:57:44.658Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-07T01:37:27.188Z",
+      "details": {
+        "note": "Synthetic demo record 38"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-07T03:50:20.273Z",
+      "details": {
+        "note": "Synthetic demo record 42"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-07T04:06:36.776Z",
+      "details": {
+        "note": "Synthetic demo record 40"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-07T01:18:36.776Z",
+      "sleep_ended_at": "2026-09-07T04:06:36.776Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-07T04:20:26.439Z",
+      "details": {
+        "note": "Synthetic demo record 41"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-07T10:28:41.482Z",
+      "details": {
+        "note": "Synthetic demo record 39"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-07T08:28:41.482Z",
+      "sleep_ended_at": "2026-09-07T10:28:41.482Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-08T04:09:25.655Z",
+      "details": {
+        "note": "Synthetic demo record 47"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 76,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-08T12:35:17.777Z",
+      "details": {
+        "note": "Synthetic demo record 44"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 54,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-08T17:08:50.034Z",
+      "details": {
+        "note": "Synthetic demo record 48"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 45,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-08T18:31:09.377Z",
+      "details": {
+        "note": "Synthetic demo record 43"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-08T19:08:36.671Z",
+      "details": {
+        "note": "Synthetic demo record 45"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-08T19:54:58.420Z",
+      "details": {
+        "note": "Synthetic demo record 46"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-09T02:52:18.025Z",
+      "details": {
+        "note": "Synthetic demo record 50"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-09T05:21:08.817Z",
+      "details": {
+        "note": "Synthetic demo record 49"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 86,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-09T07:33:18.273Z",
+      "details": {
+        "note": "Synthetic demo record 52"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-09T06:51:18.273Z",
+      "sleep_ended_at": "2026-09-09T07:33:18.273Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-09T10:31:36.066Z",
+      "details": {
+        "note": "Synthetic demo record 54"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-09T16:20:40.397Z",
+      "details": {
+        "note": "Synthetic demo record 51"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-09T15:08:40.397Z",
+      "sleep_ended_at": "2026-09-09T16:20:40.397Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-09T19:14:44.093Z",
+      "details": {
+        "note": "Synthetic demo record 53"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-10T10:19:47.694Z",
+      "details": {
+        "note": "Synthetic demo record 55"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-10T09:07:47.694Z",
+      "sleep_ended_at": "2026-09-10T10:19:47.694Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-10T22:23:20.686Z",
+      "details": {
+        "note": "Synthetic demo record 56"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-10T20:17:20.686Z",
+      "sleep_ended_at": "2026-09-10T22:23:20.686Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-10T23:19:50.188Z",
+      "details": {
+        "note": "Synthetic demo record 57"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 49,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-11T07:13:01.655Z",
+      "details": {
+        "note": "Synthetic demo record 60"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 76,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-11T11:39:51.387Z",
+      "details": {
+        "note": "Synthetic demo record 59"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 91,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-11T17:27:36.853Z",
+      "details": {
+        "note": "Synthetic demo record 58"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-11T15:03:36.853Z",
+      "sleep_ended_at": "2026-09-11T17:27:36.853Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-12T11:42:01.049Z",
+      "details": {
+        "note": "Synthetic demo record 62"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-12T14:18:37.180Z",
+      "details": {
+        "note": "Synthetic demo record 61"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-12T13:18:37.180Z",
+      "sleep_ended_at": "2026-09-12T14:18:37.180Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-12T21:15:17.759Z",
+      "details": {
+        "note": "Synthetic demo record 64"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-12T23:27:24.239Z",
+      "details": {
+        "note": "Synthetic demo record 63"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-13T08:03:53.320Z",
+      "details": {
+        "note": "Synthetic demo record 68"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-13T08:41:32.332Z",
+      "details": {
+        "note": "Synthetic demo record 65"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-13T06:11:32.332Z",
+      "sleep_ended_at": "2026-09-13T08:41:32.332Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-13T16:41:42.625Z",
+      "details": {
+        "note": "Synthetic demo record 70"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 126,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-13T17:27:20.668Z",
+      "details": {
+        "note": "Synthetic demo record 69"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-13T19:12:55.039Z",
+      "details": {
+        "note": "Synthetic demo record 67"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 108,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-13T23:20:09.772Z",
+      "details": {
+        "note": "Synthetic demo record 66"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-13T22:26:09.772Z",
+      "sleep_ended_at": "2026-09-13T23:20:09.772Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-14T03:14:28.991Z",
+      "details": {
+        "note": "Synthetic demo record 76"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 105,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-14T07:56:19.231Z",
+      "details": {
+        "note": "Synthetic demo record 71"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 70,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-14T10:45:31.099Z",
+      "details": {
+        "note": "Synthetic demo record 74"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-14T11:57:13.649Z",
+      "details": {
+        "note": "Synthetic demo record 73"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-14T15:51:36.862Z",
+      "details": {
+        "note": "Synthetic demo record 72"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 92,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-14T23:15:20.209Z",
+      "details": {
+        "note": "Synthetic demo record 75"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-14T22:27:20.209Z",
+      "sleep_ended_at": "2026-09-14T23:15:20.209Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-15T03:06:35.418Z",
+      "details": {
+        "note": "Synthetic demo record 78"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-15T01:42:35.418Z",
+      "sleep_ended_at": "2026-09-15T03:06:35.418Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-15T03:13:46.209Z",
+      "details": {
+        "note": "Synthetic demo record 79"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 129,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-15T06:23:27.603Z",
+      "details": {
+        "note": "Synthetic demo record 77"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 57,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-15T18:17:40.502Z",
+      "details": {
+        "note": "Synthetic demo record 80"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-15T17:29:40.502Z",
+      "sleep_ended_at": "2026-09-15T18:17:40.502Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-16T11:39:48.921Z",
+      "details": {
+        "note": "Synthetic demo record 84"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-16T18:52:07.882Z",
+      "details": {
+        "note": "Synthetic demo record 83"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-16T20:23:22.336Z",
+      "details": {
+        "note": "Synthetic demo record 85"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 95,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-16T21:01:21.365Z",
+      "details": {
+        "note": "Synthetic demo record 82"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-16T19:43:21.365Z",
+      "sleep_ended_at": "2026-09-16T21:01:21.365Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-16T21:47:59.528Z",
+      "details": {
+        "note": "Synthetic demo record 81"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 126,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-17T04:24:59.671Z",
+      "details": {
+        "note": "Synthetic demo record 87"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-17T01:24:59.671Z",
+      "sleep_ended_at": "2026-09-17T04:24:59.671Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-17T05:20:22.334Z",
+      "details": {
+        "note": "Synthetic demo record 88"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-17T09:31:32.798Z",
+      "details": {
+        "note": "Synthetic demo record 86"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 90,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-17T14:43:40.760Z",
+      "details": {
+        "note": "Synthetic demo record 89"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-17T14:44:06.373Z",
+      "details": {
+        "note": "Synthetic demo record 90"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-17T17:08:43.639Z",
+      "details": {
+        "note": "Synthetic demo record 91"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-17T14:20:43.639Z",
+      "sleep_ended_at": "2026-09-17T17:08:43.639Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-18T09:00:35.016Z",
+      "details": {
+        "note": "Synthetic demo record 93"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-18T11:11:15.649Z",
+      "details": {
+        "note": "Synthetic demo record 96"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-18T11:34:54.985Z",
+      "details": {
+        "note": "Synthetic demo record 92"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-18T20:41:08.683Z",
+      "details": {
+        "note": "Synthetic demo record 94"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-18T17:59:08.683Z",
+      "sleep_ended_at": "2026-09-18T20:41:08.683Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-18T22:45:19.102Z",
+      "details": {
+        "note": "Synthetic demo record 95"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-18T21:57:19.102Z",
+      "sleep_ended_at": "2026-09-18T22:45:19.102Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-19T03:41:53.909Z",
+      "details": {
+        "note": "Synthetic demo record 97"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-19T05:42:07.561Z",
+      "details": {
+        "note": "Synthetic demo record 101"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 93,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-19T11:34:13.235Z",
+      "details": {
+        "note": "Synthetic demo record 98"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-19T10:28:13.235Z",
+      "sleep_ended_at": "2026-09-19T11:34:13.235Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-19T12:31:36.172Z",
+      "details": {
+        "note": "Synthetic demo record 100"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-19T22:10:12.168Z",
+      "details": {
+        "note": "Synthetic demo record 99"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 114,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-20T07:29:31.305Z",
+      "details": {
+        "note": "Synthetic demo record 106"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 73,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-20T09:08:04.079Z",
+      "details": {
+        "note": "Synthetic demo record 104"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 103,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-20T12:41:25.706Z",
+      "details": {
+        "note": "Synthetic demo record 105"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-20T12:46:14.277Z",
+      "details": {
+        "note": "Synthetic demo record 102"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 79,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-20T17:34:54.641Z",
+      "details": {
+        "note": "Synthetic demo record 103"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-20T15:58:54.641Z",
+      "sleep_ended_at": "2026-09-20T17:34:54.641Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-21T15:20:34.512Z",
+      "details": {
+        "note": "Synthetic demo record 109"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-21T14:02:34.512Z",
+      "sleep_ended_at": "2026-09-21T15:20:34.512Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-21T19:16:06.455Z",
+      "details": {
+        "note": "Synthetic demo record 108"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-21T20:58:13.655Z",
+      "details": {
+        "note": "Synthetic demo record 107"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 100,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-22T06:17:47.514Z",
+      "details": {
+        "note": "Synthetic demo record 111"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-22T08:18:23.809Z",
+      "details": {
+        "note": "Synthetic demo record 113"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-22T11:58:43.197Z",
+      "details": {
+        "note": "Synthetic demo record 110"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 73,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-22T16:44:42.957Z",
+      "details": {
+        "note": "Synthetic demo record 112"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-22T15:50:42.957Z",
+      "sleep_ended_at": "2026-09-22T16:44:42.957Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-23T02:47:57.211Z",
+      "details": {
+        "note": "Synthetic demo record 116"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 93,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-23T05:44:02.780Z",
+      "details": {
+        "note": "Synthetic demo record 114"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-23T13:11:40.477Z",
+      "details": {
+        "note": "Synthetic demo record 119"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 69,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-23T14:14:43.788Z",
+      "details": {
+        "note": "Synthetic demo record 115"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-23T12:44:43.788Z",
+      "sleep_ended_at": "2026-09-23T14:14:43.788Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-23T20:16:06.976Z",
+      "details": {
+        "note": "Synthetic demo record 118"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 100,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-23T23:12:15.435Z",
+      "details": {
+        "note": "Synthetic demo record 117"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-24T04:04:56.604Z",
+      "details": {
+        "note": "Synthetic demo record 122"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-24T04:34:46.070Z",
+      "details": {
+        "note": "Synthetic demo record 123"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 124,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-24T14:17:07.705Z",
+      "details": {
+        "note": "Synthetic demo record 120"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-24T13:47:07.705Z",
+      "sleep_ended_at": "2026-09-24T14:17:07.705Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-24T17:57:47.680Z",
+      "details": {
+        "note": "Synthetic demo record 121"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-25T08:55:56.750Z",
+      "details": {
+        "note": "Synthetic demo record 126"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 138,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-25T09:29:40.061Z",
+      "details": {
+        "note": "Synthetic demo record 128"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-25T08:35:40.061Z",
+      "sleep_ended_at": "2026-09-25T09:29:40.061Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-25T10:33:27.849Z",
+      "details": {
+        "note": "Synthetic demo record 127"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-25T18:30:44.485Z",
+      "details": {
+        "note": "Synthetic demo record 124"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-25T22:49:16.524Z",
+      "details": {
+        "note": "Synthetic demo record 125"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 135,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-26T16:54:39.411Z",
+      "details": {
+        "note": "Synthetic demo record 130"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-26T20:28:46.604Z",
+      "details": {
+        "note": "Synthetic demo record 129"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-26T22:55:12.210Z",
+      "details": {
+        "note": "Synthetic demo record 131"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 48,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-27T06:28:07.649Z",
+      "details": {
+        "note": "Synthetic demo record 132"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-27T05:58:07.649Z",
+      "sleep_ended_at": "2026-09-27T06:28:07.649Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-27T23:13:59.997Z",
+      "details": {
+        "note": "Synthetic demo record 133"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-28T03:03:33.370Z",
+      "details": {
+        "note": "Synthetic demo record 136"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-28T01:45:33.370Z",
+      "sleep_ended_at": "2026-09-28T03:03:33.370Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-28T03:21:27.278Z",
+      "details": {
+        "note": "Synthetic demo record 135"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-28T00:27:27.278Z",
+      "sleep_ended_at": "2026-09-28T03:21:27.278Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-09-28T15:11:44.312Z",
+      "details": {
+        "note": "Synthetic demo record 134"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-29T06:13:21.686Z",
+      "details": {
+        "note": "Synthetic demo record 138"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-29T05:25:21.686Z",
+      "sleep_ended_at": "2026-09-29T06:13:21.686Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-29T06:42:32.589Z",
+      "details": {
+        "note": "Synthetic demo record 137"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 96,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-09-29T12:47:40.645Z",
+      "details": {
+        "note": "Synthetic demo record 139"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 130,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-29T20:26:20.392Z",
+      "details": {
+        "note": "Synthetic demo record 140"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-29T18:50:20.392Z",
+      "sleep_ended_at": "2026-09-29T20:26:20.392Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-30T04:30:33.401Z",
+      "details": {
+        "note": "Synthetic demo record 142"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-30T03:54:33.401Z",
+      "sleep_ended_at": "2026-09-30T04:30:33.401Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-09-30T18:12:28.270Z",
+      "details": {
+        "note": "Synthetic demo record 141"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-09-30T17:12:28.270Z",
+      "sleep_ended_at": "2026-09-30T18:12:28.270Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-01T12:29:54.790Z",
+      "details": {
+        "note": "Synthetic demo record 145"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-01T17:52:35.132Z",
+      "details": {
+        "note": "Synthetic demo record 143"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 72,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-01T22:20:11.319Z",
+      "details": {
+        "note": "Synthetic demo record 144"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 67,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-02T02:47:57.615Z",
+      "details": {
+        "note": "Synthetic demo record 147"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-02T00:47:57.615Z",
+      "sleep_ended_at": "2026-10-02T02:47:57.615Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-02T09:09:09.097Z",
+      "details": {
+        "note": "Synthetic demo record 148"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 80,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-02T21:49:42.345Z",
+      "details": {
+        "note": "Synthetic demo record 146"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-03T10:42:17.287Z",
+      "details": {
+        "note": "Synthetic demo record 150"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-03T09:54:17.287Z",
+      "sleep_ended_at": "2026-10-03T10:42:17.287Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-03T19:03:44.778Z",
+      "details": {
+        "note": "Synthetic demo record 149"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 127,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-04T14:27:34.221Z",
+      "details": {
+        "note": "Synthetic demo record 151"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-04T12:57:34.221Z",
+      "sleep_ended_at": "2026-10-04T14:27:34.221Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-04T14:55:50.700Z",
+      "details": {
+        "note": "Synthetic demo record 153"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-04T19:29:03.833Z",
+      "details": {
+        "note": "Synthetic demo record 152"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-05T02:34:11.824Z",
+      "details": {
+        "note": "Synthetic demo record 154"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 43,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-05T16:27:50.209Z",
+      "details": {
+        "note": "Synthetic demo record 155"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 133,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-05T20:06:45.437Z",
+      "details": {
+        "note": "Synthetic demo record 156"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-05T18:36:45.437Z",
+      "sleep_ended_at": "2026-10-05T20:06:45.437Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-06T09:11:21.945Z",
+      "details": {
+        "note": "Synthetic demo record 158"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 97,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-06T17:28:12.011Z",
+      "details": {
+        "note": "Synthetic demo record 157"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 76,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-07T07:41:32.241Z",
+      "details": {
+        "note": "Synthetic demo record 161"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-07T06:23:32.241Z",
+      "sleep_ended_at": "2026-10-07T07:41:32.241Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-07T15:18:58.335Z",
+      "details": {
+        "note": "Synthetic demo record 159"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 54,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-07T21:23:08.449Z",
+      "details": {
+        "note": "Synthetic demo record 162"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-07T19:17:08.449Z",
+      "sleep_ended_at": "2026-10-07T21:23:08.449Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-07T23:48:36.464Z",
+      "details": {
+        "note": "Synthetic demo record 160"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-08T05:28:54.724Z",
+      "details": {
+        "note": "Synthetic demo record 165"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-08T06:31:04.413Z",
+      "details": {
+        "note": "Synthetic demo record 163"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 62,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-08T14:16:04.686Z",
+      "details": {
+        "note": "Synthetic demo record 166"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-08T19:34:31.553Z",
+      "details": {
+        "note": "Synthetic demo record 164"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-08T18:40:31.553Z",
+      "sleep_ended_at": "2026-10-08T19:34:31.553Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-09T04:10:31.836Z",
+      "details": {
+        "note": "Synthetic demo record 169"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-09T02:52:31.836Z",
+      "sleep_ended_at": "2026-10-09T04:10:31.836Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-09T11:40:37.299Z",
+      "details": {
+        "note": "Synthetic demo record 168"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 104,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-09T12:11:35.108Z",
+      "details": {
+        "note": "Synthetic demo record 170"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-09T17:30:52.618Z",
+      "details": {
+        "note": "Synthetic demo record 167"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-10T05:52:35.643Z",
+      "details": {
+        "note": "Synthetic demo record 174"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 104,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-10T13:21:59.267Z",
+      "details": {
+        "note": "Synthetic demo record 172"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-10T11:33:59.267Z",
+      "sleep_ended_at": "2026-10-10T13:21:59.267Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-10T17:34:50.762Z",
+      "details": {
+        "note": "Synthetic demo record 171"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 128,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-10T17:44:07.674Z",
+      "details": {
+        "note": "Synthetic demo record 173"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-10T16:08:07.674Z",
+      "sleep_ended_at": "2026-10-10T17:44:07.674Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-11T09:33:01.777Z",
+      "details": {
+        "note": "Synthetic demo record 177"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 46,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-11T13:13:27.413Z",
+      "details": {
+        "note": "Synthetic demo record 175"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-11T10:43:27.413Z",
+      "sleep_ended_at": "2026-10-11T13:13:27.413Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-11T13:29:33.485Z",
+      "details": {
+        "note": "Synthetic demo record 178"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-11T22:10:53.330Z",
+      "details": {
+        "note": "Synthetic demo record 176"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 140,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-12T07:57:40.721Z",
+      "details": {
+        "note": "Synthetic demo record 181"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-12T08:05:10.936Z",
+      "details": {
+        "note": "Synthetic demo record 180"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 119,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-12T11:54:46.951Z",
+      "details": {
+        "note": "Synthetic demo record 179"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-12T08:54:46.951Z",
+      "sleep_ended_at": "2026-10-12T11:54:46.951Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-13T09:53:27.606Z",
+      "details": {
+        "note": "Synthetic demo record 183"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-13T16:08:13.995Z",
+      "details": {
+        "note": "Synthetic demo record 182"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 89,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-13T16:41:35.363Z",
+      "details": {
+        "note": "Synthetic demo record 184"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 134,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-14T02:58:03.622Z",
+      "details": {
+        "note": "Synthetic demo record 187"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-14T10:58:29.482Z",
+      "details": {
+        "note": "Synthetic demo record 186"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "dirty"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-14T18:51:31.343Z",
+      "details": {
+        "note": "Synthetic demo record 185"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-14T16:27:31.343Z",
+      "sleep_ended_at": "2026-10-14T18:51:31.343Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-15T07:48:38.511Z",
+      "details": {
+        "note": "Synthetic demo record 189"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-15T06:36:38.511Z",
+      "sleep_ended_at": "2026-10-15T07:48:38.511Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-15T18:11:33.216Z",
+      "details": {
+        "note": "Synthetic demo record 188"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 125,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-16T08:25:04.324Z",
+      "details": {
+        "note": "Synthetic demo record 192"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-16T21:00:07.619Z",
+      "details": {
+        "note": "Synthetic demo record 191"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 82,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-16T22:13:45.282Z",
+      "details": {
+        "note": "Synthetic demo record 190"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 91,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-16T23:41:33.394Z",
+      "details": {
+        "note": "Synthetic demo record 193"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-16T21:23:33.394Z",
+      "sleep_ended_at": "2026-10-16T23:41:33.394Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-17T09:21:13.799Z",
+      "details": {
+        "note": "Synthetic demo record 194"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-17T08:51:13.799Z",
+      "sleep_ended_at": "2026-10-17T09:21:13.799Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-17T16:32:19.208Z",
+      "details": {
+        "note": "Synthetic demo record 195"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-17T14:38:19.208Z",
+      "sleep_ended_at": "2026-10-17T16:32:19.208Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-18T07:08:05.492Z",
+      "details": {
+        "note": "Synthetic demo record 197"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-18T05:08:05.492Z",
+      "sleep_ended_at": "2026-10-18T07:08:05.492Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-18T08:59:03.835Z",
+      "details": {
+        "note": "Synthetic demo record 198"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-18T11:58:42.012Z",
+      "details": {
+        "note": "Synthetic demo record 196"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-19T06:37:54.166Z",
+      "details": {
+        "note": "Synthetic demo record 201"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 67,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-19T11:19:33.344Z",
+      "details": {
+        "note": "Synthetic demo record 202"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-19T08:55:33.344Z",
+      "sleep_ended_at": "2026-10-19T11:19:33.344Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-19T13:57:25.146Z",
+      "details": {
+        "note": "Synthetic demo record 199"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-19T12:39:25.146Z",
+      "sleep_ended_at": "2026-10-19T13:57:25.146Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-19T22:35:29.962Z",
+      "details": {
+        "note": "Synthetic demo record 200"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-19T20:17:29.962Z",
+      "sleep_ended_at": "2026-10-19T22:35:29.962Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-20T02:35:06.077Z",
+      "details": {
+        "note": "Synthetic demo record 205"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "sleep",
+      "logged_at": "2026-10-20T03:05:34.758Z",
+      "details": {
+        "note": "Synthetic demo record 203"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": "2026-10-20T00:17:34.758Z",
+      "sleep_ended_at": "2026-10-20T03:05:34.758Z",
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-20T07:17:52.913Z",
+      "details": {
+        "note": "Synthetic demo record 206"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 74,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-20T20:53:06.539Z",
+      "details": {
+        "note": "Synthetic demo record 204"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 48,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-21T04:38:46.477Z",
+      "details": {
+        "note": "Synthetic demo record 209"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 82,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-21T09:16:38.632Z",
+      "details": {
+        "note": "Synthetic demo record 207"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 81,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-21T10:24:41.877Z",
+      "details": {
+        "note": "Synthetic demo record 210"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-21T15:29:40.149Z",
+      "details": {
+        "note": "Synthetic demo record 208"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-22T15:10:39.430Z",
+      "details": {
+        "note": "Synthetic demo record 213"
+      },
+      "feeding_type": "formula",
+      "amount_ml": 42,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-22T18:17:08.328Z",
+      "details": {
+        "note": "Synthetic demo record 211"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "both"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "diaper",
+      "logged_at": "2026-10-22T19:07:24.721Z",
+      "details": {
+        "note": "Synthetic demo record 214"
+      },
+      "feeding_type": null,
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": "wet"
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-22T20:52:25.377Z",
+      "details": {
+        "note": "Synthetic demo record 212"
+      },
+      "feeding_type": "breastfeeding",
+      "amount_ml": null,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-23T05:10:51.152Z",
+      "details": {
+        "note": "Synthetic demo record 215"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 61,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    },
+    {
+      "parent_id": "SYNTHETIC_PARENT_ID",
+      "baby_id": "SYNTHETIC_BABY_ID",
+      "event_type": "feeding",
+      "logged_at": "2026-10-23T11:46:51.348Z",
+      "details": {
+        "note": "Synthetic demo record 216"
+      },
+      "feeding_type": "expressed_milk",
+      "amount_ml": 136,
+      "sleep_started_at": null,
+      "sleep_ended_at": null,
+      "diaper_type": null
+    }
+  ],
+  "checkins": [
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.3,
+      "appetite": 4,
+      "created_at": "2026-08-30T20:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.3,
+      "appetite": 4,
+      "created_at": "2026-09-01T21:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.1,
+      "appetite": 4,
+      "created_at": "2026-09-03T19:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 7.3,
+      "appetite": 4,
+      "created_at": "2026-09-05T21:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 7.1,
+      "appetite": 4,
+      "created_at": "2026-09-07T21:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 7.2,
+      "appetite": 4,
+      "created_at": "2026-09-09T20:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 7,
+      "appetite": 4,
+      "created_at": "2026-09-11T19:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 7.4,
+      "appetite": 4,
+      "created_at": "2026-09-13T19:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.4,
+      "appetite": 4,
+      "created_at": "2026-09-15T20:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.4,
+      "appetite": 4,
+      "created_at": "2026-09-17T18:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.3,
+      "appetite": 4,
+      "created_at": "2026-09-19T20:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6.7,
+      "appetite": 4,
+      "created_at": "2026-09-21T20:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 6,
+      "appetite": 4,
+      "created_at": "2026-09-23T18:00:00.000Z"
+    },
+    {
+      "mood": 4,
+      "stress": 2,
+      "energy": 4,
+      "sleep_hours": 7,
+      "appetite": 4,
+      "created_at": "2026-09-25T20:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 3,
+      "energy": 3,
+      "sleep_hours": 5.1,
+      "appetite": 4,
+      "created_at": "2026-09-27T19:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 3,
+      "energy": 3,
+      "sleep_hours": 5.5,
+      "appetite": 3,
+      "created_at": "2026-09-29T19:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 5.4,
+      "appetite": 3,
+      "created_at": "2026-10-01T18:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 5.3,
+      "appetite": 3,
+      "created_at": "2026-10-03T19:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 3,
+      "energy": 3,
+      "sleep_hours": 6,
+      "appetite": 3,
+      "created_at": "2026-10-05T21:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 6,
+      "appetite": 3,
+      "created_at": "2026-10-07T21:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 4.7,
+      "appetite": 3,
+      "created_at": "2026-10-09T20:00:00.000Z"
+    },
+    {
+      "mood": 2,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 5.2,
+      "appetite": 3,
+      "created_at": "2026-10-11T21:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 5.7,
+      "appetite": 3,
+      "created_at": "2026-10-13T18:00:00.000Z"
+    },
+    {
+      "mood": 2,
+      "stress": 4,
+      "energy": 2,
+      "sleep_hours": 4.6,
+      "appetite": 3,
+      "created_at": "2026-10-15T19:00:00.000Z"
+    },
+    {
+      "mood": 2,
+      "stress": 4,
+      "energy": 2,
+      "sleep_hours": 4,
+      "appetite": 3,
+      "created_at": "2026-10-17T19:00:00.000Z"
+    },
+    {
+      "mood": 2,
+      "stress": 4,
+      "energy": 3,
+      "sleep_hours": 5.3,
+      "appetite": 3,
+      "created_at": "2026-10-19T21:00:00.000Z"
+    },
+    {
+      "mood": 3,
+      "stress": 4,
+      "energy": 2,
+      "sleep_hours": 4.9,
+      "appetite": 2,
+      "created_at": "2026-10-21T20:00:00.000Z"
+    },
+    {
+      "mood": 2,
+      "stress": 5,
+      "energy": 2,
+      "sleep_hours": 4.7,
+      "appetite": 3,
+      "created_at": "2026-10-23T18:00:00.000Z"
+    }
+  ]
+}
