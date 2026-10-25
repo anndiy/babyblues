@@ -20,7 +20,7 @@ npm test
 npm run demo:generate -- --scenario steady --days 56 --seed 42
 ```
 
-Scenarios: `steady`, `declining_wellbeing`, `recovery`, `irregular_care_activity`, `sparse_data`, `conflicting_signals`, `missing_fields`, `combined_signals`, `usage_shift_no_checkins`.
+Scenarios: `steady`, `declining_wellbeing`, `recovery`, `irregular_care_activity`, `sparse_data`, `conflicting_signals`, `missing_fields`, `combined_signals`, `usage_shift_no_checkins`, `safety_item_positive`.
 
 What each one should show in the new Support level panel:
 
@@ -32,6 +32,7 @@ What each one should show in the new Support level panel:
 | usage_shift_no_checkins | A quick check-in could help |
 | declining_wellbeing | It might help to talk to someone |
 | combined_signals | Please consider reaching out soon |
+| safety_item_positive | Please consider reaching out soon, with the safety message and the contacts highlighted (everything else in this scenario looks steady, on purpose) |
 
 ## 3. Seed Supabase (only a dedicated demo account)
 
@@ -60,3 +61,13 @@ The backend now has `POST /api/support-level` (rule-based, no AI, no AI-consent 
 4. Sign in as the demo user, reseed with any scenario above, and refresh.
 
 The crisis contacts (Tele-MANAS 14416, emergency 112) are built into both apps and show even when the backend is not running.
+
+
+## 5. Questionnaire (PHQ-9) setup
+
+New table required: open `BabyBlues_Screening_Migration.sql` (in this folder), paste it into the Supabase SQL editor, and run it once.
+Until it is run, everything else still works; the seeder prints a warning and skips the questionnaire results, and the app shows
+"could not be saved" after someone answers (the result is still shown on screen).
+
+After the migration, reseed any scenario. The mobile app's Reflections tab now has "A short questionnaire (optional)".
+See `SCREENING_NOTES.md` for what was verified, the licensing position on the EPDS, and known limits.

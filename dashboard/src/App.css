@@ -1754,3 +1754,9 @@ tbody tr:hover td {
 }
 .crisis-box li a:focus-visible { outline: 2px solid var(--bb-sage, #c9ddb7); outline-offset: 2px; }
 .crisis-box li small { flex-basis: 100%; color: var(--bb-muted, #c1c9bf); font-size: 11px; }
+
+/* ---- Latest questionnaire result inside the support panel ---- */
+.support-screening { margin-bottom: 14px; text-align: left; }
+.support-screening h3 { margin: 0 0 8px; color: var(--bb-text, #f4f6f1); font-size: 13px; }
+.support-screening p { margin: 0 0 4px; color: var(--bb-muted, #c1c9bf); font-size: 12px; line-height: 1.6; }
+.support-screening p strong { color: var(--bb-text, #f4f6f1); }

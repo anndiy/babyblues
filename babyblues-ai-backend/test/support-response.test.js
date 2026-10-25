@@ -30,3 +30,19 @@ test('response never contains raw care-log or check-in rows', () => {
   assert.ok(!json.includes('logged_at'));
   assert.ok(!json.includes('Synthetic demo record'));
 });
+
+test('response never contains raw questionnaire answers or per-item scores', () => {
+  const d = generateScenario('safety_item_positive', { now: NOW, days: 56, seed: 42 });
+  const r = buildSupportResponse({ checkins: d.checkins, careLogs: d.careLogs, screeningRows: d.screening, now: NOW, region: 'IN' });
+  const forbidden = new Set(['answers', 'difficulty', 'itemScores', 'item_scores', 'parent_id']);
+  const walk = (o) => { if (o && typeof o === 'object') for (const [k, v] of Object.entries(o)) { assert.ok(!forbidden.has(k), `leaked key ${k}`); walk(v); } };
+  walk(r);
+  assert.equal(r.screening.safetyFlag, true);
+  assert.equal(r.supportLevel.safetyAlert, true);
+});
+
+test('missing screening table is reported, not fatal', () => {
+  const r = buildSupportResponse({ screeningRows: [], screeningAvailable: false, now: NOW });
+  assert.equal(r.meta.screeningAvailable, false);
+  assert.equal(r.screening, null);
+});

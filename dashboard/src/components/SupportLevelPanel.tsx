@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { HeartPulse, ShieldCheck } from 'lucide-react';
 import {
   STATIC_CRISIS_RESOURCES_IN,
+  describeScreeningAge,
   fetchSupportLevel,
   levelCopy,
   phoneHref,
+  screeningBandLabel,
 } from '../lib/supportLevel';
 import type { CrisisResources, SupportLevelResponse } from '../lib/supportLevel';
 
@@ -75,7 +77,9 @@ export function SupportLevelPanel({ accessToken, refreshKey }: Props) {
   const copy = levelCopy(level);
   const resources = data?.crisisResources ?? STATIC_CRISIS_RESOURCES_IN;
   const showReasons = !!data && data.supportLevel.reasons.length > 0;
-  const emphasised = level === 'talk_to_someone' || level === 'talk_to_someone_priority';
+  const emphasised =
+    level === 'talk_to_someone' || level === 'talk_to_someone_priority' || data?.supportLevel.safetyAlert === true;
+  const screening = data?.screening ?? null;
 
   return (
     <section className="panel support-panel support-level-panel" aria-live="polite">
@@ -117,6 +121,27 @@ export function SupportLevelPanel({ accessToken, refreshKey }: Props) {
                   <li key={reason}>{reason}</li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {screening && (
+            <div className="support-screening">
+              <h3>Latest questionnaire</h3>
+              <p>
+                <strong>{screening.name}</strong> completed {describeScreeningAge(screening.ageDays)}:{' '}
+                {screening.total} out of {screening.max}. {screeningBandLabel(screening.band)}.
+              </p>
+              {!screening.fresh && (
+                <p className="chart-footnote">
+                  This is more than three weeks old, so it is not used for the support level above.
+                </p>
+              )}
+              {screening.somaticHeavy && (
+                <p className="chart-footnote">
+                  Several of these points come from questions about sleep, tiredness and appetite, which are also
+                  affected by caring for a newborn.
+                </p>
+              )}
             </div>
           )}
 

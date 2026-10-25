@@ -19,7 +19,18 @@ import {
   levelCopy,
   phoneHref,
 } from './lib/supportLevel';
-import type { SupportLevelResponse } from './lib/supportLevel';
+import type { CrisisContact, SupportLevelResponse } from './lib/supportLevel';
+import {
+  PHQ9_ATTRIBUTION,
+  PHQ9_DIFFICULTY_OPTIONS,
+  PHQ9_DIFFICULTY_PROMPT,
+  PHQ9_ITEMS,
+  PHQ9_OPTIONS,
+  PHQ9_PROMPT,
+  phq9ResultCopy,
+  scorePhq9,
+} from './lib/phq9';
+import type { Phq9Result } from './lib/phq9';
 
 type Baby = {
   id: string;
@@ -255,6 +266,13 @@ const [aiAnalysisError, setAiAnalysisError] = useState('');
 const [supportData, setSupportData] = useState<SupportLevelResponse | null>(null);
 const [supportLoading, setSupportLoading] = useState(false);
 const [supportError, setSupportError] = useState('');
+const [supportReloadKey, setSupportReloadKey] = useState(0);
+const [screeningOpen, setScreeningOpen] = useState(false);
+const [screeningAnswers, setScreeningAnswers] = useState<Array<number | null>>(Array(9).fill(null));
+const [screeningDifficulty, setScreeningDifficulty] = useState<number | null>(null);
+const [screeningSaving, setScreeningSaving] = useState(false);
+const [screeningError, setScreeningError] = useState('');
+const [screeningResult, setScreeningResult] = useState<Phq9Result | null>(null);
 
 const [discoverCategory, setDiscoverCategory] = useState<DiscoverCategory>('All');
 const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
@@ -473,7 +491,7 @@ const [communityStatus, setCommunityStatus] = useState('');
     return () => {
       alive = false;
     };
-  }, [session?.access_token, activeTab, checkins[0]?.id]);
+  }, [session?.access_token, activeTab, checkins[0]?.id, supportReloadKey]);
 
   useEffect(() => {
     if (!session?.user.id) {
@@ -857,6 +875,41 @@ const [communityStatus, setCommunityStatus] = useState('');
     setStatus(nextValue
       ? 'AI-assisted reflections enabled. You can request an analysis whenever you choose.'
       : 'AI-assisted reflections disabled; the displayed AI result has been cleared.');
+  }
+
+  function closeScreening() {
+    setScreeningOpen(false);
+    setScreeningAnswers(Array(9).fill(null));
+    setScreeningDifficulty(null);
+    setScreeningError('');
+  }
+
+  async function submitScreening() {
+    if (!session) return;
+    const result = scorePhq9(screeningAnswers);
+    if (!result) {
+      setScreeningError('Please answer all nine questions, or choose Not now.');
+      return;
+    }
+
+    setScreeningSaving(true);
+    setScreeningError('');
+    const { error } = await supabase.from('screening_responses').insert({
+      parent_id: session.user.id,
+      instrument: 'phq9',
+      answers: screeningAnswers,
+      difficulty: screeningDifficulty,
+    });
+    setScreeningSaving(false);
+
+    // Safety first: always show the result on screen, even if saving failed.
+    setScreeningResult(result);
+    setScreeningOpen(false);
+    if (error) {
+      setScreeningError(`Your answers could not be saved (${error.message}). If this keeps happening, run BabyBlues_Screening_Migration.sql in Supabase.`);
+    } else {
+      setSupportReloadKey((key) => key + 1);
+    }
   }
 
   async function runAIAnalysis() {
@@ -1322,6 +1375,109 @@ const [communityStatus, setCommunityStatus] = useState('');
     </>
   );
 
+  const renderCrisisContacts = (contacts: CrisisContact[]) =>
+    contacts.map((contact) => {
+      const href = phoneHref(contact.number);
+      return (
+        <TouchableOpacity
+          key={contact.label}
+          style={styles.crisisRow}
+          disabled={!href}
+          accessibilityRole="button"
+          accessibilityLabel={href ? `Call ${contact.label}, ${contact.number}` : contact.label}
+          onPress={() => { if (href) void Linking.openURL(href); }}
+        >
+          <Text style={styles.crisisLabel}>{contact.label}</Text>
+          <Text style={styles.crisisNumber}>{contact.number ?? 'Contact your local service'}</Text>
+          {!!contact.note && <Text style={styles.smallText}>{contact.note}</Text>}
+        </TouchableOpacity>
+      );
+    });
+
+  const renderScreening = () => {
+    if (screeningResult) {
+      const copy = phq9ResultCopy(screeningResult);
+      return (
+        <View style={[styles.card, copy.showCrisis && styles.crisisCard]}>
+          <Text style={styles.supportHeadline}>{copy.headline}</Text>
+          <Text style={styles.bodyText}>{copy.body}</Text>
+          {!!screeningError && <Text style={styles.errorText}>{screeningError}</Text>}
+          {copy.showCrisis && renderCrisisContacts([STATIC_CRISIS_RESOURCES_IN.emergency, ...STATIC_CRISIS_RESOURCES_IN.support])}
+          <TouchableOpacity style={styles.quietButton} onPress={() => { setScreeningResult(null); setScreeningError(''); }}>
+            <Text style={styles.mutedText}>Done</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    if (!screeningOpen) {
+      return (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>A short questionnaire (optional)</Text>
+          <Text style={styles.bodyText}>Nine questions about the last two weeks, from the PHQ-9, a widely used and freely available questionnaire. It takes about two minutes. You can stop at any time, and your answers stay in your account.</Text>
+          <Text style={styles.smallText}>This is not a diagnosis. Questions about sleep, tiredness and appetite are also affected by looking after a newborn, so a high score can have several explanations. If you would rather talk to someone now, the contacts above are always available.</Text>
+          <TouchableOpacity style={styles.primaryButton} onPress={() => { setScreeningResult(null); setScreeningOpen(true); }}>
+            <Text style={styles.primaryButtonText}>Answer the questions</Text>
+          </TouchableOpacity>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>The last two weeks</Text>
+        <Text style={styles.bodyText}>{PHQ9_PROMPT}</Text>
+        {PHQ9_ITEMS.map((item, index) => (
+          <View key={item}>
+            <Text style={styles.screeningItemText}>{index + 1}. {item}</Text>
+            <View style={styles.chipRow}>
+              {PHQ9_OPTIONS.map((label, value) => {
+                const selected = screeningAnswers[index] === value;
+                return (
+                  <TouchableOpacity
+                    key={label}
+                    style={[styles.chip, selected && styles.chipSelected]}
+                    accessibilityRole="radio"
+                    accessibilityState={{ selected }}
+                    onPress={() => setScreeningAnswers((current) => current.map((answer, i) => (i === index ? value : answer)))}
+                  >
+                    <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </View>
+        ))}
+        <Text style={styles.screeningItemText}>{PHQ9_DIFFICULTY_PROMPT} (optional)</Text>
+        <View style={styles.chipRow}>
+          {PHQ9_DIFFICULTY_OPTIONS.map((label, value) => {
+            const selected = screeningDifficulty === value;
+            return (
+              <TouchableOpacity
+                key={label}
+                style={[styles.chip, selected && styles.chipSelected]}
+                accessibilityRole="radio"
+                accessibilityState={{ selected }}
+                onPress={() => setScreeningDifficulty(value)}
+              >
+                <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{label}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+        {!!screeningError && <Text style={styles.errorText}>{screeningError}</Text>}
+        <Text style={styles.smallText}>{screeningAnswers.filter((answer) => answer !== null).length} of 9 answered</Text>
+        <TouchableOpacity style={styles.primaryButton} onPress={submitScreening} disabled={screeningSaving}>
+          <Text style={styles.primaryButtonText}>{screeningSaving ? 'Saving…' : 'Save my answers'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.quietButton} onPress={closeScreening} disabled={screeningSaving}>
+          <Text style={styles.mutedText}>Not now</Text>
+        </TouchableOpacity>
+        <Text style={styles.smallText}>{PHQ9_ATTRIBUTION}</Text>
+      </View>
+    );
+  };
+
   const renderSupportLevel = () => {
     const copy = levelCopy(supportData?.supportLevel.level);
     const resources = supportData?.crisisResources ?? STATIC_CRISIS_RESOURCES_IN;
@@ -1370,23 +1526,7 @@ const [communityStatus, setCommunityStatus] = useState('');
         <View style={[styles.card, styles.crisisCard]}>
           <Text style={styles.cardTitle}>If you need to talk to someone now</Text>
           <Text style={styles.bodyText}>You do not have to wait for a pattern or a score. Reaching out is always okay.</Text>
-          {contacts.map((contact) => {
-            const href = phoneHref(contact.number);
-            return (
-              <TouchableOpacity
-                key={contact.label}
-                style={styles.crisisRow}
-                disabled={!href}
-                accessibilityRole="button"
-                accessibilityLabel={href ? `Call ${contact.label}, ${contact.number}` : contact.label}
-                onPress={() => { if (href) void Linking.openURL(href); }}
-              >
-                <Text style={styles.crisisLabel}>{contact.label}</Text>
-                <Text style={styles.crisisNumber}>{contact.number ?? 'Contact your local service'}</Text>
-                {!!contact.note && <Text style={styles.smallText}>{contact.note}</Text>}
-              </TouchableOpacity>
-            );
-          })}
+          {renderCrisisContacts(contacts)}
         </View>
       </>
     );
@@ -1414,6 +1554,8 @@ const [communityStatus, setCommunityStatus] = useState('');
         <Text style={styles.pageSubtitle}>A gentle look at the check-ins you chose to share. These patterns are for reflection—not diagnosis, prediction, or a score of how you are doing.</Text>
 
         {renderSupportLevel()}
+
+        {renderScreening()}
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>AI-assisted reflection (optional)</Text>
@@ -1973,6 +2115,7 @@ const styles = StyleSheet.create({
   supportHeadline: { fontSize: 15, fontWeight: '800', color: '#455345', marginBottom: 6 },
   crisisCard: { backgroundColor: '#F1F5EE', borderColor: '#C9D9C4' },
   crisisRow: { paddingVertical: 10, minHeight: 48, justifyContent: 'center' },
+  screeningItemText: { color: '#4D5D4D', fontSize: 13, fontWeight: '600', lineHeight: 19, marginTop: 12, marginBottom: 8 },
   crisisLabel: { color: '#455345', fontSize: 13, fontWeight: '600' },
   crisisNumber: { color: '#2F4A36', fontSize: 20, fontWeight: '800', marginTop: 2 },
 });

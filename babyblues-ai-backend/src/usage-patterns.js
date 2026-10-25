@@ -135,26 +135,47 @@ export function extractUsagePatterns({ careLogs, now = new Date(), windowDays = 
 }
 
 /**
- * Combine self-report (features) and usage patterns into a support level.
+ * Combine self-report (check-ins), an optional recent screening questionnaire, and usage patterns
+ * into a support level.
  * Levels: insufficient_data | no_flags | gentle_prompt | talk_to_someone | talk_to_someone_priority
+ *
+ * Extra rules for questionnaires:
+ *  - A positive self-harm item (PHQ-9 item 9 / EPDS item 10) ALWAYS gives the top level and a safety alert,
+ *    whatever the check-ins or logging look like.
+ *  - A questionnaire concern is never downgraded because logging looks normal.
+ *  - Old questionnaires (see screening.js FRESH_DAYS) do not drive the level.
  */
-export function deriveSupportLevel({ features, usage }) {
+export function deriveSupportLevel({ features, usage, screening = null }) {
   const reasons = [];
   const snapshot = features?.currentSnapshot ?? {};
   const currentCheckins = features?.currentPeriod?.checkinCount ?? 0;
-  const selfReportAvailable = currentCheckins >= 3;
+  const checkinsAvailable = currentCheckins >= 3;
+  const screen = screening && screening.fresh ? screening : null;
+  const selfReportAvailable = checkinsAvailable || !!screen;
 
   const worsening = (features?.signals ?? []).filter(
     (s) => ['mood', 'stress', 'energy'].includes(s.key) && s.direction === 'worsening'
   );
   const lowMood = Number.isFinite(snapshot.mood) && snapshot.mood <= 2.5;
   const highStress = Number.isFinite(snapshot.stress) && snapshot.stress >= 4;
-  const selfReportConcern = selfReportAvailable && (lowMood || highStress || worsening.length >= 2);
+  const checkinConcern = checkinsAvailable && (lowMood || highStress || worsening.length >= 2);
+  const safetyAlert = !!screen?.safetyFlag;
+  const screenConcern = !!screen && (screen.concern || safetyAlert);
+  const selfReportConcern = checkinConcern || screenConcern;
 
-  if (selfReportConcern) {
+  if (checkinConcern) {
     if (lowMood) reasons.push(`Your recent mood check-ins average ${snapshot.mood}/5.`);
     if (highStress) reasons.push(`Your recent stress check-ins average ${snapshot.stress}/5.`);
     if (worsening.length >= 2) reasons.push(`${worsening.map((s) => s.title.toLowerCase()).join(', ')} moved in a less favourable direction compared with your earlier weeks.`);
+  }
+  if (safetyAlert) {
+    reasons.push('Your recent questionnaire included an answer about thoughts of harming yourself.');
+  }
+  if (screen && screen.concern) {
+    reasons.push(`Your recent ${screen.name} questionnaire score is ${screen.total} out of ${screen.max}.`);
+    if (screen.somaticHeavy) {
+      reasons.push('Several of those points come from questions about sleep, tiredness and appetite, which are also affected by caring for a newborn. That is worth mentioning to a professional; it does not mean the score should be ignored.');
+    }
   }
 
   const usageChange = usage?.status === 'notable_change';
@@ -164,12 +185,17 @@ export function deriveSupportLevel({ features, usage }) {
 
   let level;
   let message;
-  if (selfReportConcern && usageChange) {
+  if (safetyAlert) {
     level = 'talk_to_someone_priority';
-    message = 'Your own check-ins and your logging pattern have both shifted from your earlier weeks. It would be worth speaking with a healthcare professional or someone you trust soon.';
+    message = 'Thank you for answering honestly. Your answers mention thoughts of harming yourself or being better off dead. You deserve support right now, and you do not have to wait for anything else. Please contact one of the numbers below or tell someone you trust today. If you or your baby may be in immediate danger, call emergency services.';
+  } else if (screen?.strong || (selfReportConcern && usageChange)) {
+    level = 'talk_to_someone_priority';
+    message = screen?.strong && !usageChange
+      ? 'Your recent questionnaire answers suggest things have been very hard. It would be worth speaking with a healthcare professional or someone you trust soon.'
+      : 'Your own answers and your logging pattern have both shifted from your earlier weeks. It would be worth speaking with a healthcare professional or someone you trust soon.';
   } else if (selfReportConcern) {
     level = 'talk_to_someone';
-    message = 'Your recent check-ins suggest things may be hard right now. Consider talking to a healthcare professional or someone you trust.';
+    message = 'Your recent answers suggest things may be hard right now. Consider talking to a healthcare professional or someone you trust.';
   } else if (usageChange && !selfReportAvailable) {
     level = 'gentle_prompt';
     message = 'Your logging pattern has changed from your earlier weeks. That is often ordinary, and we cannot tell from logging alone. A quick optional check-in would help us understand.';
@@ -179,21 +205,23 @@ export function deriveSupportLevel({ features, usage }) {
   } else {
     level = 'no_flags';
     message = usageChange
-      ? 'Your logging pattern has changed, but your own check-ins look steady or better, so this is treated as context only.'
-      : 'Nothing in your recent check-ins or logging pattern met this prototype’s thresholds. This does not rule out a concern.';
-    if (usageChange) reasons.push('Self-reported check-ins are available and not concerning, so the usage change is context only.');
+      ? 'Your logging pattern has changed, but your own answers look steady or better, so this is treated as context only.'
+      : 'Nothing in your recent answers or logging pattern met this prototype’s thresholds. This does not rule out a concern.';
+    if (usageChange) reasons.push('Your own answers are available and not concerning, so the usage change is context only.');
   }
 
   return {
     level,
     message,
     reasons,
+    safetyAlert,
     usageAloneCanEscalate: false,
     crisisResourcesAlwaysAvailable: true,
     limits: [
       'Not a diagnosis, screening result, or validated clinical prediction.',
       'Usage patterns have many ordinary explanations and are never used alone to suggest a concern.',
-      'A concerning check-in is never dismissed because logging looks normal.'
+      'A concerning answer is never dismissed because logging looks normal.',
+      'BabyBlues is not monitored by anyone in real time and cannot respond to an emergency.'
     ]
   };
 }

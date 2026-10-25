@@ -30,6 +30,21 @@ export type UsageMeasure = {
   detail: string;
 };
 
+export type ScreeningSummary = {
+  instrument: 'phq9' | 'epds';
+  name: string;
+  total: number;
+  max: number;
+  band: string;
+  completedAt: string;
+  ageDays: number;
+  fresh: boolean;
+  concern: boolean;
+  strong: boolean;
+  safetyFlag: boolean;
+  somaticHeavy: boolean;
+};
+
 export type SupportLevelResponse = {
   generatedAt: string;
   windowDays: number;
@@ -38,10 +53,12 @@ export type SupportLevelResponse = {
     message: string;
     reasons: string[];
     limits: string[];
+    safetyAlert: boolean;
     usageAloneCanEscalate: boolean;
     crisisResourcesAlwaysAvailable: boolean;
   };
   selfReport: { currentCheckinCount: number; previousCheckinCount: number; dataStatus: string };
+  screening: ScreeningSummary | null;
   usage: {
     status: 'insufficient_data' | 'no_notable_change' | 'notable_change';
     measures: UsageMeasure[];
@@ -49,7 +66,7 @@ export type SupportLevelResponse = {
     timezoneNote: string;
   };
   crisisResources: CrisisResources;
-  meta: { usesAI: boolean; notice: string };
+  meta: { usesAI: boolean; notice: string; screeningAvailable?: boolean };
 };
 
 export const SUPPORT_LEVEL_COPY: Record<SupportLevelId, { title: string; tone: SupportTone }> = {
@@ -73,6 +90,28 @@ export const STATIC_CRISIS_RESOURCES_IN: CrisisResources = {
 
 export function levelCopy(level: string | undefined): { title: string; tone: SupportTone } {
   return SUPPORT_LEVEL_COPY[level as SupportLevelId] ?? SUPPORT_LEVEL_COPY.insufficient_data;
+}
+
+const SCREENING_BAND_LABELS: Record<string, string> = {
+  minimal: 'Few difficulties reported',
+  mild: 'Some difficulties reported',
+  moderate: 'Worth discussing with a professional',
+  moderately_severe: 'Worth speaking to a professional soon',
+  severe: 'Worth speaking to a professional soon',
+  low: 'Few difficulties reported',
+  watch: 'Some difficulties reported',
+  likely: 'Worth speaking to a professional soon',
+};
+
+/** Gentle wording for a questionnaire band. Never names a condition. */
+export function screeningBandLabel(band: string | undefined): string {
+  return (band && SCREENING_BAND_LABELS[band]) || 'Result recorded';
+}
+
+export function describeScreeningAge(ageDays: number): string {
+  if (ageDays <= 0) return 'today';
+  if (ageDays === 1) return 'yesterday';
+  return `${ageDays} days ago`;
 }
 
 export function phoneHref(number: string | null | undefined): string | null {

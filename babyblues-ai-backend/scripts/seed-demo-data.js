@@ -50,7 +50,7 @@ if (actualEmail !== expectedEmail) {
 
 const fixture = generateScenario(scenario, { days, seed, parentId, babyId: undefined });
 console.log(`About to replace synthetic demo records for Auth user ${parentId}.`);
-console.log(`Scenario: ${fixture.metadata.title}; ${days} days; ${fixture.metadata.counts.careLogs} care logs; ${fixture.metadata.counts.wellbeingCheckins} check-ins.`);
+console.log(`Scenario: ${fixture.metadata.title}; ${days} days; ${fixture.metadata.counts.careLogs} care logs; ${fixture.metadata.counts.wellbeingCheckins} check-ins; ${fixture.metadata.counts.screeningResponses} questionnaire results.`);
 
 if (dryRun) {
   console.log('Dry run: the demo account was verified and nothing was changed.');
@@ -59,6 +59,16 @@ if (dryRun) {
 
 // Destructive operations are scoped exclusively to the explicitly configured demo user.
 // Delete children before babies. Do not touch profile/auth records or consent preferences.
+// Questionnaire results live in a table added by BabyBlues_Screening_Migration.sql. If it has not been run yet,
+// skip it with a warning so the rest of the demo data still loads.
+let screeningTableReady = true;
+{
+  const { error } = await supabase.from('screening_responses').delete().eq('parent_id', parentId);
+  if (error) {
+    screeningTableReady = false;
+    console.warn(`Skipping questionnaire results (${error.code || error.message}). Run BabyBlues_Screening_Migration.sql in Supabase to enable them.`);
+  }
+}
 for (const table of ['care_logs', 'wellbeing_checkins', 'babies']) {
   const { error } = await supabase.from(table).delete().eq('parent_id', parentId);
   if (error) throw new Error(`Could not clear ${table} for demo user: ${error.message}`);
@@ -80,6 +90,13 @@ const checkinRows = fixture.checkins.map((row) => ({ ...row, parent_id: parentId
 for (let i = 0; i < checkinRows.length; i += 100) {
   const { error } = await supabase.from('wellbeing_checkins').insert(checkinRows.slice(i, i + 100));
   if (error) throw new Error(`Could not insert wellbeing check-ins (batch ${Math.floor(i / 100) + 1}): ${error.message}`);
+}
+
+if (screeningTableReady && fixture.screening.length) {
+  const screeningRows = fixture.screening.map((row) => ({ ...row, parent_id: parentId }));
+  const { error } = await supabase.from('screening_responses').insert(screeningRows);
+  if (error) throw new Error(`Could not insert questionnaire results: ${error.message}`);
+  console.log(`Questionnaire results inserted: ${screeningRows.length}`);
 }
 
 console.log('Demo data seeded successfully.');

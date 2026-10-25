@@ -2,9 +2,11 @@ import { describe, expect, it } from 'vitest';
 import {
   STATIC_CRISIS_RESOURCES_IN,
   SUPPORT_LEVEL_COPY,
+  describeScreeningAge,
   fetchSupportLevel,
   levelCopy,
   phoneHref,
+  screeningBandLabel,
 } from './supportLevel';
 
 const okBody = { supportLevel: { level: 'no_flags' }, crisisResources: STATIC_CRISIS_RESOURCES_IN };
@@ -79,5 +81,23 @@ describe('fetchSupportLevel', () => {
 
   it('refuses to call when no address is configured', async () => {
     await expect(fetchSupportLevel({ apiBaseUrl: '', accessToken: 't' })).rejects.toThrow('address is not set');
+  });
+});
+
+describe('questionnaire wording', () => {
+  it('gives gentle labels for every band and never names a condition', () => {
+    for (const band of ['minimal', 'mild', 'moderate', 'moderately_severe', 'severe', 'low', 'watch', 'likely']) {
+      const label = screeningBandLabel(band);
+      expect(/depress|diagnos|disorder/i.test(label)).toBe(false);
+      expect(label.length > 0).toBe(true);
+    }
+    expect(screeningBandLabel('something_new')).toBe('Result recorded');
+    expect(screeningBandLabel(undefined)).toBe('Result recorded');
+  });
+
+  it('describes how long ago a questionnaire was completed', () => {
+    expect(describeScreeningAge(0)).toBe('today');
+    expect(describeScreeningAge(1)).toBe('yesterday');
+    expect(describeScreeningAge(9)).toBe('9 days ago');
   });
 });

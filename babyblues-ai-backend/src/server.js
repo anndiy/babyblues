@@ -163,8 +163,19 @@ app.post('/api/support-level', async (req, res) => {
     if (checkinResult.error) return res.status(500).json({ error: 'Could not load wellbeing check-ins.' });
     if (careResult.error) return res.status(500).json({ error: 'Could not load baby-care activity.' });
 
+    // Questionnaire results are optional: if the table is missing or unreadable, carry on without them.
+    const screeningResult = await db.from('screening_responses')
+      .select('instrument, answers, created_at')
+      .eq('parent_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(5);
+    if (screeningResult.error) console.warn('Screening responses unavailable:', screeningResult.error.code || screeningResult.error.message);
+
     return res.json(buildSupportResponse({
-      checkins: checkinResult.data || [], careLogs: careResult.data || [], now, windowDays, utcOffsetMinutes, region
+      checkins: checkinResult.data || [], careLogs: careResult.data || [],
+      screeningRows: screeningResult.error ? [] : (screeningResult.data || []),
+      screeningAvailable: !screeningResult.error,
+      now, windowDays, utcOffsetMinutes, region
     }));
   } catch (error) {
     console.error('Support-level request failed:', error?.message || error);

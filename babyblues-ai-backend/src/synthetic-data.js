@@ -8,6 +8,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Steady routine',
     description: 'Fairly consistent care logging and self-reported wellbeing.',
     displayName: 'Demo Baby — Steady',
+    screening: [{ daysAgo: 4, total: 3, item9: 0 }, { daysAgo: 25, total: 4, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [3, 6], current: [3, 6] },
     wellbeing: {
@@ -19,6 +20,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Changing self-reported wellbeing',
     description: 'Self-reported measures trend less favourably in the recent window. This is not a diagnosis.',
     displayName: 'Demo Baby — Changing Pattern',
+    screening: [{ daysAgo: 3, total: 12, item9: 0 }, { daysAgo: 24, total: 5, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [3, 6], current: [2, 5] },
     wellbeing: {
@@ -30,6 +32,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Improving self-reported wellbeing',
     description: 'Recent self-reported measures trend more favourably than the previous window.',
     displayName: 'Demo Baby — Recovery Pattern',
+    screening: [{ daysAgo: 3, total: 4, item9: 0 }, { daysAgo: 30, total: 13, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [2, 5], current: [3, 6] },
     wellbeing: {
@@ -41,6 +44,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Irregular care logging, stable check-ins',
     description: 'Care-log activity changes while self-reported wellbeing remains broadly stable. Care-log counts are context only.',
     displayName: 'Demo Baby — Irregular Logs',
+    screening: [{ daysAgo: 5, total: 3, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [4, 7], current: [0, 2] },
     wellbeing: {
@@ -63,6 +67,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Different signals tell different stories',
     description: 'Care-log frequency declines while self-reported wellbeing improves; the app must not equate logging frequency with mental state.',
     displayName: 'Demo Baby — Mixed Signals',
+    screening: [{ daysAgo: 4, total: 5, item9: 0 }, { daysAgo: 30, total: 12, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [4, 7], current: [1, 3] },
     wellbeing: {
@@ -74,6 +79,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Partial check-in fields',
     description: 'Some optional self-reported fields are missing while other values remain available.',
     displayName: 'Demo Baby — Partial Data',
+    screening: [{ daysAgo: 6, total: 4, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [2, 5], current: [2, 5] },
     wellbeing: {
@@ -86,6 +92,7 @@ export const SCENARIOS = Object.freeze({
     title: 'Self-report and usage both shifted',
     description: 'Check-ins trend less favourably AND logging becomes sparser, more overnight, with longer gaps. Highest support level; still not a diagnosis.',
     displayName: 'Demo Baby \u2014 Combined Signals',
+    screening: [{ daysAgo: 2, total: 17, item9: 0 }, { daysAgo: 26, total: 5, item9: 0 }],
     checkinInterval: 2,
     care: { previous: [3, 6], current: [1, 3] },
     usage: { previous: { nightShare: 0.12, zeroDayProb: 0.03 }, current: { nightShare: 0.38, zeroDayProb: 0.3 } },
@@ -107,6 +114,19 @@ export const SCENARIOS = Object.freeze({
       current: { mood: 4.0, stress: 2.3, energy: 3.9, sleep_hours: 6.7, appetite: 4.0 }
     }
   }
+  ,
+  safety_item_positive: {
+    title: 'Everything looks steady except one answer',
+    description: 'Check-ins and logging look steady, but the latest questionnaire answer about thoughts of self-harm is positive. The safety path must always take priority.',
+    displayName: 'Demo Baby \u2014 Safety Check',
+    screening: [{ daysAgo: 2, total: 6, item9: 1 }],
+    checkinInterval: 2,
+    care: { previous: [3, 6], current: [3, 6] },
+    wellbeing: {
+      previous: { mood: 4, stress: 2, energy: 4, sleep_hours: 6.8, appetite: 4 },
+      current: { mood: 4, stress: 2, energy: 4, sleep_hours: 6.7, appetite: 4 }
+    }
+  }
 });
 
 function makeRng(seed) {
@@ -121,6 +141,19 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const jitter = (rng, amount) => (rng() * 2 - 1) * amount;
 const round1 = (value) => value == null ? null : Math.round(value * 10) / 10;
 const iso = (date) => date.toISOString();
+
+/** PHQ-9 answers (0-3 each) with an exact total; item 9 (index 8) is set separately. */
+function makePhq9Answers(rng, total, item9) {
+  const answers = Array(9).fill(0);
+  answers[8] = item9;
+  let remaining = total - item9;
+  if (remaining < 0 || remaining > 24) throw new Error('screening total is out of range');
+  while (remaining > 0) {
+    const i = Math.floor(rng() * 8);
+    if (answers[i] < 3) { answers[i] += 1; remaining -= 1; }
+  }
+  return answers;
+}
 
 function careCountForDay(rng, bounds, scenario, dayOffset, days) {
   let [min, max] = bounds;
@@ -244,6 +277,16 @@ export function generateScenario(name = 'steady', options = {}) {
 
   careLogs.sort((a, b) => new Date(a.logged_at) - new Date(b.logged_at));
   checkins.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  const screening = (config.screening ?? [])
+    .filter((entry) => entry.daysAgo < days)
+    .map((entry) => ({
+      parent_id: parentId,
+      instrument: 'phq9',
+      answers: makePhq9Answers(rng, entry.total, entry.item9),
+      difficulty: null,
+      created_at: iso(new Date(now.getTime() - entry.daysAgo * 86400000))
+    }))
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
   return {
     metadata: {
       generated: true,
@@ -255,11 +298,12 @@ export function generateScenario(name = 'steady', options = {}) {
       historyDays: days,
       parentId,
       babyId,
-      counts: { babies: 1, careLogs: careLogs.length, wellbeingCheckins: checkins.length },
+      counts: { babies: 1, careLogs: careLogs.length, wellbeingCheckins: checkins.length, screeningResponses: screening.length },
       disclaimer: 'Entirely synthetic software-test data. Not real people, clinical evidence, or a validated prediction.'
     },
     baby,
     careLogs,
-    checkins
+    checkins,
+    screening
   };
 }
