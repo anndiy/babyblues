@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SCENARIOS, generateScenario } from '../src/synthetic-data.js';
-import { extractFeatures } from '../../babyblues-ai-backend new/src/features.js';
+import { extractFeatures } from '../src/features.js';
 
 const NOW = new Date('2026-10-23T12:00:00.000Z');
 

@@ -81,6 +81,32 @@ export const SCENARIOS = Object.freeze({
       current: { mood: 3.5, stress: 3.0, energy: 3.3, sleep_hours: null, appetite: null }
     }
   }
+  ,
+  combined_signals: {
+    title: 'Self-report and usage both shifted',
+    description: 'Check-ins trend less favourably AND logging becomes sparser, more overnight, with longer gaps. Highest support level; still not a diagnosis.',
+    displayName: 'Demo Baby \u2014 Combined Signals',
+    checkinInterval: 2,
+    care: { previous: [3, 6], current: [1, 3] },
+    usage: { previous: { nightShare: 0.12, zeroDayProb: 0.03 }, current: { nightShare: 0.38, zeroDayProb: 0.3 } },
+    wellbeing: {
+      previous: { mood: 4.1, stress: 2.0, energy: 4.0, sleep_hours: 6.9, appetite: 4.0 },
+      current: { mood: 2.4, stress: 4.2, energy: 2.3, sleep_hours: 4.6, appetite: 2.6 }
+    }
+  },
+  usage_shift_no_checkins: {
+    title: 'Logging changed and check-ins stopped',
+    description: 'Logging becomes sparser and more overnight, and no recent check-ins exist. Usage alone may only prompt a gentle, optional check-in.',
+    displayName: 'Demo Baby \u2014 Quiet Period',
+    checkinInterval: 2,
+    checkinOnly: 'previous',
+    care: { previous: [3, 6], current: [1, 3] },
+    usage: { previous: { nightShare: 0.12, zeroDayProb: 0.03 }, current: { nightShare: 0.38, zeroDayProb: 0.3 } },
+    wellbeing: {
+      previous: { mood: 4.0, stress: 2.3, energy: 3.9, sleep_hours: 6.7, appetite: 4.0 },
+      current: { mood: 4.0, stress: 2.3, energy: 3.9, sleep_hours: 6.7, appetite: 4.0 }
+    }
+  }
 });
 
 function makeRng(seed) {
@@ -169,6 +195,8 @@ export function generateScenario(name = 'steady', options = {}) {
   const now = options.now instanceof Date ? new Date(options.now) : new Date(options.now ?? Date.now());
   if (!Number.isFinite(now.getTime())) throw new Error('now must be a valid date');
   const seed = Number(options.seed ?? 42);
+  // Hours are chosen in the parent's LOCAL time (default India, UTC+5:30) and stored as UTC, like the real app.
+  const utcOffsetMinutes = Number(options.utcOffsetMinutes ?? 330);
   const rng = makeRng(seed);
   const parentId = options.parentId ?? 'SYNTHETIC_PARENT_ID';
   const babyId = options.babyId ?? 'SYNTHETIC_BABY_ID';
@@ -186,9 +214,16 @@ export function generateScenario(name = 'steady', options = {}) {
     dayStart.setUTCDate(dayStart.getUTCDate() - dayOffset);
     dayStart.setUTCHours(0, 0, 0, 0);
     const [min, max] = dayOffset < 28 ? config.care.current : config.care.previous;
-    const count = careCountForDay(rng, [min, max], name, dayOffset, days);
+    const usageCfg = config.usage ? (dayOffset < 28 ? config.usage.current : config.usage.previous) : null;
+    let count = careCountForDay(rng, [min, max], name, dayOffset, days);
+    if (usageCfg && rng() < usageCfg.zeroDayProb) count = 0;
     for (let j = 0; j < count; j++) {
-      const timestamp = new Date(dayStart.getTime() + Math.floor((1 + rng() * 22) * 3600000) + Math.floor(rng() * 3600000));
+      // Local hour: overnight (0-5) with the scenario's night share, otherwise 6-23.
+      const overnight = usageCfg ? rng() < usageCfg.nightShare : false;
+      const localHourOfDay = usageCfg
+        ? (overnight ? rng() * 5 : 6 + rng() * 17)
+        : 1 + rng() * 22;
+      const timestamp = new Date(dayStart.getTime() - utcOffsetMinutes * 60000 + Math.floor(localHourOfDay * 3600000) + Math.floor(rng() * 600000));
       if (timestamp > now) continue;
       careLogs.push(createCareLog(rng, babyId, parentId, timestamp, index++));
     }
@@ -200,6 +235,7 @@ export function generateScenario(name = 'steady', options = {}) {
       const interval = config.checkinInterval ?? 2;
       shouldCheckin = dayOffset % interval === 0;
     }
+    if (config.checkinOnly === 'previous' && dayOffset < 28) shouldCheckin = false;
     if (shouldCheckin && dayStart <= now) {
       const checkinTime = new Date(dayStart.getTime() + (18 + Math.floor(rng() * 4)) * 3600000);
       if (checkinTime <= now) checkins.push(createCheckin(config, name, dayOffset, rng, checkinTime));

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +13,13 @@ import {
 } from 'react-native';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from './lib/supabase';
+import {
+  STATIC_CRISIS_RESOURCES_IN,
+  fetchSupportLevel,
+  levelCopy,
+  phoneHref,
+} from './lib/supportLevel';
+import type { SupportLevelResponse } from './lib/supportLevel';
 
 type Baby = {
   id: string;
@@ -244,6 +252,9 @@ const [aiConsentSetupReady, setAiConsentSetupReady] = useState(false);
 const [aiAnalysis, setAiAnalysis] = useState<AIWellbeingAnalysis | null>(null);
 const [aiAnalysisLoading, setAiAnalysisLoading] = useState(false);
 const [aiAnalysisError, setAiAnalysisError] = useState('');
+const [supportData, setSupportData] = useState<SupportLevelResponse | null>(null);
+const [supportLoading, setSupportLoading] = useState(false);
+const [supportError, setSupportError] = useState('');
 
 const [discoverCategory, setDiscoverCategory] = useState<DiscoverCategory>('All');
 const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
@@ -424,6 +435,45 @@ const [communityStatus, setCommunityStatus] = useState('');
       alive = false;
     };
   }, [session?.user.id]);
+
+  // Support level: rule-based, no AI. Reloads when the Reflections tab opens or a new check-in arrives.
+  useEffect(() => {
+    if (!session?.access_token) {
+      setSupportData(null);
+      setSupportError('');
+      return;
+    }
+    if (activeTab !== 'insights') return;
+
+    const accessToken = session.access_token;
+    let alive = true;
+
+    async function loadSupportLevel() {
+      setSupportLoading(true);
+      setSupportError('');
+      try {
+        const result = await fetchSupportLevel({
+          apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? '',
+          accessToken,
+          region: 'IN',
+        });
+        if (alive) setSupportData(result);
+      } catch (error) {
+        if (alive) {
+          setSupportData(null);
+          setSupportError(error instanceof Error ? error.message : 'The support summary is unavailable.');
+        }
+      } finally {
+        if (alive) setSupportLoading(false);
+      }
+    }
+
+    void loadSupportLevel();
+
+    return () => {
+      alive = false;
+    };
+  }, [session?.access_token, activeTab, checkins[0]?.id]);
 
   useEffect(() => {
     if (!session?.user.id) {
@@ -1272,6 +1322,76 @@ const [communityStatus, setCommunityStatus] = useState('');
     </>
   );
 
+  const renderSupportLevel = () => {
+    const copy = levelCopy(supportData?.supportLevel.level);
+    const resources = supportData?.crisisResources ?? STATIC_CRISIS_RESOURCES_IN;
+    const contacts = [resources.emergency, ...resources.support];
+    const toneStyle = copy.tone === 'gentle'
+      ? styles.supportToneGentle
+      : copy.tone === 'caring' || copy.tone === 'priority'
+        ? styles.supportToneCaring
+        : styles.supportToneCalm;
+    return (
+      <>
+        <View style={[styles.card, styles.supportCard, toneStyle]}>
+          <Text style={styles.cardTitle}>How things look lately</Text>
+          {supportLoading ? (
+            <View style={styles.aiLoadingRow}>
+              <ActivityIndicator size="small" color="#4E6655" />
+              <Text style={styles.mutedText}>Looking at your recent weeks…</Text>
+            </View>
+          ) : supportData ? (
+            <>
+              <Text style={styles.supportHeadline}>{copy.title}</Text>
+              <Text style={styles.bodyText}>{supportData.supportLevel.message}</Text>
+              {supportData.supportLevel.reasons.length > 0 && (
+                <>
+                  <Text style={styles.aiSectionTitle}>What this is based on</Text>
+                  {supportData.supportLevel.reasons.map((reason) => (
+                    <Text key={reason} style={styles.bodyText}>• {reason}</Text>
+                  ))}
+                </>
+              )}
+              <Text style={styles.aiSectionTitle}>Your logging pattern vs. your own earlier weeks</Text>
+              {supportData.usage.measures.map((measure) => (
+                <View key={measure.key} style={styles.aiSignalRow}>
+                  <Text style={styles.aiSignalTitle}>{measure.title}</Text>
+                  <Text style={styles.bodyText}>{measure.detail}</Text>
+                </View>
+              ))}
+              <Text style={styles.smallText}>Logging often changes for ordinary reasons: {supportData.usage.ordinaryExplanations.join(' ')}</Text>
+              <Text style={styles.smallText}>{supportData.meta.notice} No AI is used for this card. Changes in logging alone are never treated as a sign of a mental-health condition.</Text>
+            </>
+          ) : (
+            <Text style={styles.bodyText}>{supportError || 'The support summary is unavailable right now.'} Your data is safe, and the contacts below are always available.</Text>
+          )}
+        </View>
+
+        <View style={[styles.card, styles.crisisCard]}>
+          <Text style={styles.cardTitle}>If you need to talk to someone now</Text>
+          <Text style={styles.bodyText}>You do not have to wait for a pattern or a score. Reaching out is always okay.</Text>
+          {contacts.map((contact) => {
+            const href = phoneHref(contact.number);
+            return (
+              <TouchableOpacity
+                key={contact.label}
+                style={styles.crisisRow}
+                disabled={!href}
+                accessibilityRole="button"
+                accessibilityLabel={href ? `Call ${contact.label}, ${contact.number}` : contact.label}
+                onPress={() => { if (href) void Linking.openURL(href); }}
+              >
+                <Text style={styles.crisisLabel}>{contact.label}</Text>
+                <Text style={styles.crisisNumber}>{contact.number ?? 'Contact your local service'}</Text>
+                {!!contact.note && <Text style={styles.smallText}>{contact.note}</Text>}
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+      </>
+    );
+  };
+
   const renderInsights = () => {
     const latest = checkins[0];
     const previous = checkins[1];
@@ -1292,6 +1412,8 @@ const [communityStatus, setCommunityStatus] = useState('');
         <Text style={styles.eyebrow}>YOUR JOURNEY, YOUR PACE</Text>
         <Text style={styles.pageTitle}>My Insights 💛</Text>
         <Text style={styles.pageSubtitle}>A gentle look at the check-ins you chose to share. These patterns are for reflection—not diagnosis, prediction, or a score of how you are doing.</Text>
+
+        {renderSupportLevel()}
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>AI-assisted reflection (optional)</Text>
@@ -1844,4 +1966,13 @@ const styles = StyleSheet.create({
   aiSignalRow: { paddingVertical: 8, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#DDD7CE' },
   aiSignalTitle: { fontSize: 14, fontWeight: '700', color: '#4D5D4D', marginBottom: 3 },
   errorText: { color: '#A4473D', marginTop: 8, fontSize: 13, lineHeight: 18 },
+  supportCard: { borderLeftWidth: 4 },
+  supportToneCalm: { borderLeftColor: '#8FAE90' },
+  supportToneGentle: { borderLeftColor: '#7FA8B3' },
+  supportToneCaring: { borderLeftColor: '#D9A77E' },
+  supportHeadline: { fontSize: 15, fontWeight: '800', color: '#455345', marginBottom: 6 },
+  crisisCard: { backgroundColor: '#F1F5EE', borderColor: '#C9D9C4' },
+  crisisRow: { paddingVertical: 10, minHeight: 48, justifyContent: 'center' },
+  crisisLabel: { color: '#455345', fontSize: 13, fontWeight: '600' },
+  crisisNumber: { color: '#2F4A36', fontSize: 20, fontWeight: '800', marginTop: 2 },
 });

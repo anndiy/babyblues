@@ -17,18 +17,15 @@ if (!SCENARIOS[scenario]) {
   process.exit(1);
 }
 
-const required = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'DEMO_USER_ID'];
+const dryRun = args.includes('--dry-run');
+const required = ['SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY', 'DEMO_USER_ID', 'DEMO_USER_EMAIL'];
 const missing = required.filter((key) => !process.env[key]);
 if (missing.length) {
   console.error(`Missing environment variables: ${missing.join(', ')}`);
   process.exit(1);
 }
-if (process.env.DEMO_SEED_ALLOW_DELETIONS !== 'true') {
+if (!dryRun && process.env.DEMO_SEED_ALLOW_DELETIONS !== 'true') {
   console.error('Safety stop: set DEMO_SEED_ALLOW_DELETIONS=true only after confirming DEMO_USER_ID is a dedicated demo account.');
-  process.exit(1);
-}
-if (process.env.NODE_ENV === 'production' && process.env.DEMO_SEED_ALLOW_DELETIONS !== 'true') {
-  console.error('Refusing to seed production without explicit confirmation.');
   process.exit(1);
 }
 
@@ -42,9 +39,23 @@ if (authError || !authUser?.user) {
   process.exit(1);
 }
 
+// Second safety check: the Auth user's email must match the email you declared for the demo account.
+// This catches a copy-pasted wrong UUID before anything is deleted.
+const actualEmail = String(authUser.user.email || '').trim().toLowerCase();
+const expectedEmail = String(process.env.DEMO_USER_EMAIL).trim().toLowerCase();
+if (actualEmail !== expectedEmail) {
+  console.error('Safety stop: DEMO_USER_ID does not belong to the account named in DEMO_USER_EMAIL. Nothing was changed.');
+  process.exit(1);
+}
+
 const fixture = generateScenario(scenario, { days, seed, parentId, babyId: undefined });
 console.log(`About to replace synthetic demo records for Auth user ${parentId}.`);
 console.log(`Scenario: ${fixture.metadata.title}; ${days} days; ${fixture.metadata.counts.careLogs} care logs; ${fixture.metadata.counts.wellbeingCheckins} check-ins.`);
+
+if (dryRun) {
+  console.log('Dry run: the demo account was verified and nothing was changed.');
+  process.exit(0);
+}
 
 // Destructive operations are scoped exclusively to the explicitly configured demo user.
 // Delete children before babies. Do not touch profile/auth records or consent preferences.

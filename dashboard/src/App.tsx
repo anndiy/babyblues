@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { generateSupportSignals } from './lib/insights';
 import { evaluateWellbeingData } from './lib/evaluation';
+import { SupportLevelPanel } from './components/SupportLevelPanel';
 import {
   Activity,
   Baby,
@@ -575,7 +576,12 @@ function App() {
       </section>
 
       {loading && <p className="loading-inline">Refreshing dashboard data…</p>}
-      
+
+      <SupportLevelPanel
+        accessToken={session.access_token}
+        refreshKey={`${careLogs.length}-${checkins.length}`}
+      />
+
 <section className="panel support-panel">
   <div className="panel-heading">
     <div>
