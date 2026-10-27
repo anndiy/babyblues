@@ -208,7 +208,7 @@ const DISCOVER_ARTICLES: DiscoverArticle[] = [
         'Never shake, hit, or handle a baby roughly. If you think you might lose control, put the baby down in a safe place and get immediate help from another adult or local emergency service.'
       ]},
       { heading: 'You can ask for help before it becomes a crisis', body: [
-        'Persistent crying can be draining, especially with little sleep. Tell your paediatrician or healthcare professional how long it happens, when it tends to start, how feeding is going, and what you have already tried. A short note can make the conversation easier.'
+        'Persistent crying can be draining, especially with little sleep. If a baby under 3 months old cries nonstop for more than 2 hours and cannot be consoled, contact your paediatrician or seek care now, even if no other symptoms are present. For other persistent crying, tell your paediatrician or healthcare professional how long it happens, when it tends to start, how feeding is going, and what you have already tried. A short note can make the conversation easier.'
       ]}
     ],
     note: 'Seek urgent medical care for severe or rapidly worsening symptoms, breathing difficulty, a baby who is hard to wake, or any situation that feels like an emergency. This guide cannot determine why a baby is crying.'
