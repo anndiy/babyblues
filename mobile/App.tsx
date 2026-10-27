@@ -79,97 +79,250 @@ type DiscoverArticle = {
   subtitle: string;
   color: string;
   readTime: string;
+  author: string;
+  publishedAt: string;
   sections: { heading: string; body: string[] }[];
   note?: string;
 };
 
 const EVENT_TYPES: EventType[] = ['feeding', 'sleep', 'diaper'];
 
+// Keep authorship and publication time in one place so every Discover article
+// uses the same visible byline format. Update this timestamp when republishing.
+const DISCOVER_ARTICLE_META = {
+  author: '~team BabyBlues 💙',
+  publishedAt: '2026-10-27T11:57:00+05:30',
+};
+
 const DISCOVER_ARTICLES: DiscoverArticle[] = [
   {
+    ...DISCOVER_ARTICLE_META,
     id: 'overwhelmed', category: 'For you', emoji: '🫶', title: 'When everything feels like a lot',
-    subtitle: 'A small plan for moments when you feel stretched thin.', color: '#F3EAF7', readTime: '3 min read',
+    subtitle: 'A doable plan for the next ten minutes, not the whole day.', color: '#F3EAF7', readTime: '4 min read',
     sections: [
-      { heading: 'Make the next step smaller', body: [
-        'You do not have to solve the whole day right now. Pick one immediate need: drink some water, eat something simple, use the bathroom, or sit somewhere comfortable.',
-        'If the baby is in a safe place, it is okay to take a brief pause to collect yourself.'
+      { heading: 'Start with one immediate need', body: [
+        'When every task feels urgent, pause the mental list and choose one basic need: drink water, eat something simple, use the bathroom, take prescribed medication, or sit somewhere supported. You do not need to earn these few minutes by finishing something first.',
+        'If you need to step away, first place your baby in a safe sleep space or ask a trusted adult to take over. A short pause is a reasonable response to overload, not a failure.'
       ]},
-      { heading: 'Ask for a specific kind of help', body: [
-        'Try a clear request such as: “Could you hold the baby for 20 minutes while I shower?” or “Could you bring me something to eat?” Specific requests can be easier for someone to act on.',
-        'If help is available, you do not have to earn it by doing everything alone.'
+      { heading: 'Ask for help someone can act on', body: [
+        '“Let me know if you need anything” can be hard to answer when you are exhausted. Try one specific request: “Could you hold the baby from 2 to 2:30 while I shower?” or “Could you drop off dinner and leave it at the door?”',
+        'Name the task, the time, and whether you want advice or simply company. People cannot always say yes, but a clear request gives them a real opportunity to help.'
       ]},
-      { heading: 'Let “good enough” count', body: [
-        'Some days, feeding everyone, keeping the baby safe, and getting through the next hour is enough. Non-urgent chores can wait.'
+      { heading: 'Choose a good-enough standard', body: [
+        'For today, define the essentials: everyone safe, basic care covered, and you fed and hydrated as best you can. Laundry, replying to messages, and having a tidy home can wait or be handed to someone else.',
+        'You are adjusting to a major change. Progress may look like getting through the next feed or asking for a break, rather than completing a long list.'
+      ]},
+      { heading: 'Notice when you need more than a pause', body: [
+        'Feeling overwhelmed can happen, but persistent or worsening anxiety, low mood, panic, numbness, or difficulty functioning deserves support from a doctor, midwife, counsellor, or another qualified professional. You do not need to wait until things feel unbearable to ask.'
       ]}
     ],
-    note: 'If feeling overwhelmed, anxious, low, or unlike yourself persists or interferes with daily life, contact a healthcare professional. If you think you may harm yourself or your baby, seek urgent help now and ask a trusted person to stay with you.'
+    note: 'If you think you may harm yourself or your baby, put the baby somewhere safe, contact local emergency or crisis support, and ask a trusted person to stay with you while help is arranged.'
   },
   {
-    id: 'breathing', category: 'For you', emoji: '🌬️', title: 'A two-minute pause',
-    subtitle: 'A gentle reset you can try without needing a perfect quiet moment.', color: '#EAF2E8', readTime: '2 min practice',
+    ...DISCOVER_ARTICLE_META,
+    id: 'breathing', category: 'For you', emoji: '🌬️', title: 'A two-minute pause that needs no silence',
+    subtitle: 'A small grounding practice for an ordinary, noisy day.', color: '#EAF2E8', readTime: '2 min practice',
     sections: [
-      { heading: 'Settle where you are', body: [
-        'Sit or stand in a supported position. Let your shoulders drop if that feels comfortable, and loosen your jaw.',
-        'You do not need to close your eyes. Keep them open if that feels better.'
+      { heading: 'Settle without making it a performance', body: [
+        'Sit or stand somewhere supported. Let your feet rest against the floor if that is comfortable. Unclench your jaw and drop your shoulders only if it feels natural. Keep your eyes open if closing them makes you feel less comfortable.',
+        'There is no perfect posture to achieve. The point is to make the next moment a little easier, not to add another task to your day.'
       ]},
-      { heading: 'Let your breathing be natural', body: [
-        'Notice one ordinary breath coming in and going out. If it feels comfortable, allow the exhale to be a little slower without forcing or holding your breath.',
-        'When your attention wanders, gently return it to the next breath. There is nothing to get right.'
+      { heading: 'Follow one ordinary breath', body: [
+        'Notice the air moving in and out. If it feels comfortable, allow the out-breath to become a little slower. Do not force deep breaths, hold your breath, or try to reach a particular count.',
+        'If your mind jumps to the next feed, chore, or worry, notice that it wandered and return to one breath. Wandering attention is normal; it does not mean you are doing it wrong.'
       ]},
-      { heading: 'Choose one next step', body: [
-        'Before you continue, ask yourself: “What would help me in the next ten minutes?” It might be food, a message to someone, a stretch, or simply carrying on slowly.'
+      { heading: 'Come back to the room', body: [
+        'Name three things you can see, two things you can feel, and one sound you can hear. Then ask: “What would help me in the next ten minutes?” Choose one small next step, or decide that a short rest is enough for now.'
       ]}
     ],
-    note: 'Stop the exercise if you feel dizzy, breathless, or uncomfortable. This is a brief coping practice, not a substitute for support when you need it.'
+    note: 'Stop if the exercise makes you dizzy, breathless, panicky, or uncomfortable. Grounding can be a useful coping tool, but it is not a substitute for professional care when you need more support.'
   },
   {
-    id: 'newborn-cues', category: 'Baby care', emoji: '🍼', title: 'Learning your baby’s cues',
-    subtitle: 'Look for patterns over time rather than expecting every moment to be predictable.', color: '#FBEDE2', readTime: '3 min read',
+    ...DISCOVER_ARTICLE_META,
+    id: 'newborn-cues', category: 'Baby care', emoji: '🍼', title: 'Learning your baby’s cues, one day at a time',
+    subtitle: 'Look for patterns without expecting every moment to be predictable.', color: '#FBEDE2', readTime: '4 min read',
     sections: [
-      { heading: 'Notice, respond, and learn', body: [
-        'Babies communicate through sounds, movements, facial expressions, and changes in alertness. One cue can mean different things in different situations.',
-        'You can pause to check common needs such as feeding, a nappy change, temperature, comfort, or tiredness. Over time, you may notice patterns that are particular to your baby.'
+      { heading: 'Look at the whole picture', body: [
+        'Babies communicate through sounds, facial expressions, movements, sucking, and changes in alertness. A single cue does not always mean the same thing. Turning toward a feed, bringing hands to the mouth, fussing, or becoming quieter may be useful clues, depending on the baby and the situation.',
+        'Check common needs one at a time: feeding, a nappy change, temperature, comfort, a change of position, or sleep. If one approach does not help, it is okay to pause and reassess rather than assume you have missed something obvious.'
       ]},
-      { heading: 'Keep notes simple', body: [
-        'If it helps, log feeds, sleep, and nappies in BabyBlues. Use the record as a memory aid for yourself or for a conversation with your child’s healthcare professional—not as a test you need to pass.',
-        'It is normal to need time and support while you learn what works for your family.'
+      { heading: 'Use notes as a memory aid', body: [
+        'A simple record of feeds, sleep, nappies, and anything unusual can help you notice patterns and answer questions at appointments. BabyBlues can hold those notes so you do not have to rely on memory when you are tired.',
+        'The log is not a scorecard. Babies vary, and their needs change with age and health. Do not use an app alone to decide whether your baby is getting enough milk or is medically well.'
       ]},
-      { heading: 'When you are unsure', body: [
-        'For questions about feeding, weight gain, hydration, or symptoms, ask your paediatrician or another qualified healthcare professional for guidance specific to your baby.'
+      { heading: 'When to get an individual answer', body: [
+        'If feeding is difficult, your baby is unusually sleepy, weight gain is a concern, nappies are much less wet than usual, or something about their behaviour worries you, contact your paediatrician or another qualified healthcare professional. Seek urgent care for trouble breathing, difficulty waking, or other severe or rapidly worsening symptoms.'
       ]}
     ]
   },
   {
-    id: 'rest', category: 'Recovery', emoji: '🌙', title: 'Rest when sleep comes in pieces',
-    subtitle: 'Small ways to protect recovery when long stretches of sleep are hard to find.', color: '#EAEFF8', readTime: '3 min read',
+    ...DISCOVER_ARTICLE_META,
+    id: 'rest', category: 'Recovery', emoji: '🌙', title: 'Rest in fragments, while keeping sleep safe',
+    subtitle: 'Protect your recovery without relying on a perfect routine.', color: '#EAEFF8', readTime: '4 min read',
     sections: [
-      { heading: 'Think in opportunities, not perfect routines', body: [
-        'If another trusted adult is available, discuss a practical handover or protected rest window. Even planning who is “on duty” can reduce the mental load.',
-        'If you cannot sleep when the opportunity appears, quiet rest may still be a useful pause. Avoid judging yourself for how quickly you fall asleep.'
+      { heading: 'Plan a handover, not a perfect schedule', body: [
+        'If another trusted adult is available, agree on a specific rest window and who is responsible for the baby during it. Even a short, protected block can reduce the number of decisions you have to make. Be clear about when the handover starts and ends.',
+        'If sleep does not come, quiet rest may still give you a pause. You do not need to judge yourself for being unable to fall asleep on demand.'
       ]},
-      { heading: 'Reduce the decisions around you', body: [
-        'Keep water, a snack, your charger, and other frequently used items where they are easy to reach. Prepare only what is safe to prepare ahead of time.',
-        'Consider postponing non-urgent tasks and letting visitors help with food, dishes, laundry, or errands rather than expecting yourself to host.'
+      { heading: 'Make the next hour easier', body: [
+        'Keep water, a snack, your phone charger, and essentials within reach. Ask visitors to help with food, dishes, laundry, or errands instead of expecting yourself to host them. Postpone non-urgent tasks when you can.',
+        'If you are becoming drowsy while holding or feeding your baby, think ahead about how to put the baby down safely. Sofas and armchairs are especially risky places to fall asleep with a baby.'
       ]},
-      { heading: 'Keep baby sleep safety separate', body: [
-        'When you are drowsy, put your baby in their own safe sleep space rather than risk falling asleep while holding them on a sofa or armchair. Follow current safe-sleep guidance from your healthcare provider or public-health authority.'
+      { heading: 'Keep the baby’s sleep space simple', body: [
+        'For every sleep, place your baby on their back on a firm, flat sleep surface designed for infants. Keep the sleep space clear of pillows, loose blankets, soft toys, and other soft objects. Follow the current guidance provided by your paediatrician or local public-health authority.',
+        'If you feel yourself nodding off while holding your baby, place them in their own safe sleep space before you rest. Ask another adult to take over when one is available.'
       ]}
     ],
-    note: 'If exhaustion feels unmanageable or you are worried about your recovery, speak with your healthcare professional.'
+    note: 'If exhaustion feels unsafe or unmanageable, or you are worried about your physical recovery or mood, contact your healthcare professional rather than trying to push through alone.'
   },
   {
-    id: 'asking-help', category: 'Recovery', emoji: '🤲', title: 'Making a practical support plan',
-    subtitle: 'Turn “let me know if you need anything” into help you can actually use.', color: '#F8EDE7', readTime: '2 min read',
+    ...DISCOVER_ARTICLE_META,
+    id: 'asking-help', category: 'Recovery', emoji: '🤲', title: 'Build a support plan you can actually use',
+    subtitle: 'Turn kind offers into practical help for real-life days.', color: '#F8EDE7', readTime: '3 min read',
     sections: [
-      { heading: 'List the tasks that drain you', body: [
-        'Think beyond baby care: meals, laundry, groceries, cleaning, transport, messages, and arranging appointments all take energy.'
+      { heading: 'Write down the invisible tasks', body: [
+        'Baby care is only one part of the work. Meals, laundry, groceries, cleaning, transport, appointments, paperwork, and answering messages all take energy. Choose the two tasks that are making today harder rather than trying to list everything.',
+        'You do not have to coordinate every detail yourself. Asking someone to own a task from start to finish can be more useful than asking them to “help out” generally.'
       ]},
-      { heading: 'Match a task to a person', body: [
-        'Ask one person to bring dinner on a particular day, another to pick up supplies, or someone you trust to sit with you while you make a call. Give a time and a clear task where possible.',
-        'If someone cannot help with one thing, you can ask whether another option would work.'
+      { heading: 'Match each task to a person and a time', body: [
+        'Try: “Could you bring lunch tomorrow around 1?” “Can you pick up these supplies on your way over?” or “Could you sit with me while I call the clinic?” A time and a clear task make it easier to answer.',
+        'If someone cannot do the exact task, you can ask if another option works. If nobody is available, consider whether a healthcare professional, local parent group, community organisation, or social worker can point you toward support.'
       ]},
-      { heading: 'Include emotional support', body: [
-        'You might say, “I do not need advice right now; could you listen for ten minutes?” or “Can you check in with me tomorrow?” You are allowed to say what kind of support would help.'
+      { heading: 'Ask for the kind of emotional support you want', body: [
+        'You might say, “I do not need solutions right now; could you listen for ten minutes?” or “Can you check in with me tomorrow?” You are allowed to ask for company without turning the conversation into a problem-solving session.',
+        'Keep the plan flexible. Your needs may change from one day to the next, and accepting help does not mean you have to repay it immediately.'
+      ]}
+    ]
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'crying', category: 'Baby care', emoji: '🧸', title: 'When the crying will not stop',
+    subtitle: 'A calm checklist for your baby, and a safety plan for you.', color: '#F7E9E6', readTime: '4 min read',
+    sections: [
+      { heading: 'Check the basics, one by one', body: [
+        'Check whether your baby may be hungry, needs a nappy change, feels too warm or cool, needs a burp, or wants to be held. A quieter room, a gentle voice, or slow rocking may help some babies. Not every method works every time, and crying can continue even when you are caring for your baby well.',
+        'Notice what is different from your baby’s usual behaviour. If the cry sounds unusual, your baby seems in pain, is refusing feeds, is difficult to wake, has breathing trouble, or you are worried they may be unwell, seek medical advice promptly.'
+      ]},
+      { heading: 'If you are reaching your limit, pause safely', body: [
+        'Place your baby on their back in a clear, safe cot or crib, then step into another room for a few minutes to calm down. Call someone you trust if you can. Return to check on your baby once you feel steadier, or arrange for another safe adult to take over.',
+        'Never shake, hit, or handle a baby roughly. If you think you might lose control, put the baby down in a safe place and get immediate help from another adult or local emergency service.'
+      ]},
+      { heading: 'You can ask for help before it becomes a crisis', body: [
+        'Persistent crying can be draining, especially with little sleep. Tell your paediatrician or healthcare professional how long it happens, when it tends to start, how feeding is going, and what you have already tried. A short note can make the conversation easier.'
+      ]}
+    ],
+    note: 'Seek urgent medical care for severe or rapidly worsening symptoms, breathing difficulty, a baby who is hard to wake, or any situation that feels like an emergency. This guide cannot determine why a baby is crying.'
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'feeding', category: 'Baby care', emoji: '🥛', title: 'Feeding questions without the guilt spiral',
+    subtitle: 'Use observations to guide a conversation, not to grade yourself.', color: '#F4EEDF', readTime: '4 min read',
+    sections: [
+      { heading: 'Watch your baby, not just the clock', body: [
+        'Feeding patterns can vary by age, whether a baby is breastfed or formula-fed, and individual needs. Early hunger cues can include stirring, bringing hands to the mouth, or turning toward a feed. Crying can be a later cue, but cues are not a perfect checklist.',
+        'Follow the feeding plan recommended for your baby. Do not force a feed or change a prescribed plan based only on an app or a general article. If you are unsure how often or how much your baby should feed, ask your paediatrician, midwife, or qualified lactation professional.'
+      ]},
+      { heading: 'Record the details that help', body: [
+        'When useful, note the time, feeding type, amount if measured, and anything you noticed such as difficulty latching, repeated coughing, or unusual sleepiness. Keep the record simple enough that it does not become another source of pressure.',
+        'A single feed may not tell the full story. A clinician can consider your baby’s age, weight trend, feeding behaviour, hydration, and overall health together.'
+      ]},
+      { heading: 'When to contact your care team', body: [
+        'Reach out if feeding repeatedly hurts, your baby struggles to feed, seems unusually sleepy, is not waking for feeds as expected, has fewer wet nappies than usual, or you are concerned about growth. Difficulty breathing, marked unresponsiveness, or other severe symptoms need urgent care.'
+      ]}
+    ],
+    note: 'This article is general information. Feeding advice should be tailored to your baby, especially for newborns, premature babies, or babies with medical conditions.'
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'postpartum-feelings', category: 'Recovery', emoji: '💙', title: 'Your feelings deserve care after birth, too',
+    subtitle: 'You can love your baby and still find this transition difficult.', color: '#EAF0F8', readTime: '4 min read',
+    sections: [
+      { heading: 'There is no single correct way to feel', body: [
+        'You may feel joy, worry, grief for your old routine, irritability, numbness, or several of these at once. A difficult feeling does not make you a bad parent, and gratitude does not cancel out exhaustion or distress.',
+        'Try describing the experience plainly to someone safe: “I feel on edge most of the day,” “I cannot switch off my worries,” or “I do not feel like myself.” Clear words can make it easier to explain what is happening.'
+      ]},
+      { heading: 'Notice changes that deserve support', body: [
+        'If low mood, anxiety, panic, intrusive worries, hopelessness, or difficulty managing daily life persists, worsens, or feels frightening, contact your doctor, midwife, or a qualified mental-health professional. You do not need to diagnose yourself before asking for help.',
+        'Tell the person you contact how long you have felt this way, whether you can rest when given the chance, and how the feelings affect your day. If speaking feels difficult, write it down or ask someone trusted to join you.'
+      ]},
+      { heading: 'Make one small connection today', body: [
+        'Send a short message to someone you trust, ask for a check-in, or tell your healthcare team directly that you are struggling. You deserve support for your wellbeing, not only advice about caring for the baby.'
+      ]}
+    ],
+    note: 'If you may harm yourself or your baby, feel unable to keep either of you safe, or experience a mental-health emergency, seek urgent local emergency or crisis support now and ask a trusted person to stay with you.'
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'visitors', category: 'Recovery', emoji: '🚪', title: 'Visitors, boundaries, and the right to recover',
+    subtitle: 'You can welcome people without becoming their host.', color: '#F8EDE7', readTime: '3 min read',
+    sections: [
+      { heading: 'Decide what a visit should look like', body: [
+        'Before agreeing to a visit, ask yourself what would actually help: a short visit, a meal left at the door, practical chores, or no visitors today. Your answer can change from one day to another.',
+        'You do not owe everyone a long explanation. A simple “We are keeping visits short while we settle in” is enough.'
+      ]},
+      { heading: 'Use a sentence you can repeat', body: [
+        'Try: “Today is not a good day for visitors, but we will message when we are ready.” Or: “We would love the food drop-off, but we are not up for hosting.” If you want help, ask a partner or trusted relative to communicate the boundary for you.',
+        'If someone visits, it is reasonable to ask them to wash their hands, stay away when unwell, and follow your preferences for holding or kissing the baby. You can change your mind at any time.'
+      ]},
+      { heading: 'Make visits useful, if you want them', body: [
+        'A helpful visitor might prepare food, wash dishes, fold laundry, pick up groceries, or hold the baby while you take a shower, if you are comfortable with that. You do not need to tidy the house or serve refreshments first.',
+        'Rest and privacy are valid reasons to say no. Protecting your recovery is not the same as rejecting the people who care about you.'
+      ]}
+    ]
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'diaper-notes', category: 'Baby care', emoji: '🧷', title: 'What nappy notes can tell you, and what they cannot',
+    subtitle: 'Patterns matter more than turning every change into a calculation.', color: '#F7EFE3', readTime: '3 min read',
+    sections: [
+      { heading: 'Use a log as a memory aid', body: [
+        'Recording wet or dirty nappies can help you remember what happened between feeds and appointments, particularly when you are tired. If your care team has asked you to track changes, follow their instructions and bring the record to your next conversation.',
+        'The number and pattern of nappies change as babies grow. A general app entry cannot tell you by itself whether your baby is hydrated, feeding enough, or unwell.'
+      ]},
+      { heading: 'Notice a change from your baby’s usual pattern', body: [
+        'Contact your healthcare professional if nappies are much less wet than usual, you are worried about urine output, or there are concerns about feeding, vomiting, diarrhoea, or weight gain. Mention your baby’s age and when you last noticed a wet nappy.',
+        'Seek prompt medical advice if your baby is unusually sleepy, difficult to wake, not feeding, has a dry mouth, or seems unwell. For severe symptoms or an emergency, use local emergency services.'
+      ]},
+      { heading: 'Keep the record simple', body: [
+        'A time and a short note are usually easier to maintain than a long description. You can add details when something changes or when your clinician asks for them. The aim is to support a useful conversation, not to create another thing to get perfect.'
+      ]}
+    ],
+    note: 'If you have been given a specific monitoring plan by your baby’s clinician, use that plan instead of general guidance in this article.'
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'care-team', category: 'For you', emoji: '🩺', title: 'Make the next appointment easier to use',
+    subtitle: 'You do not need to remember every question while you are in the room.', color: '#EAEFF0', readTime: '3 min read',
+    sections: [
+      { heading: 'Write the three questions that matter most', body: [
+        'Before the appointment, write down the biggest concern, a change you have noticed, and one thing you want to understand before you leave. If there are several questions, start with the ones that affect safety, feeding, recovery, or your ability to cope day to day.',
+        'Bring notes from BabyBlues if they help: care logs, feeding observations, sleep concerns, or a brief record of your mood. You do not need to collect data for its own sake; share only what is relevant and comfortable.'
+      ]},
+      { heading: 'Say what you are unsure about', body: [
+        'It is fine to say, “I am not sure what is normal here,” or “Could you show me what you mean?” Ask what changes would warrant a call, how quickly you should seek help, and who to contact outside normal clinic hours.',
+        'If an explanation feels unclear, ask the clinician to repeat it in plain language or write down the next steps. You are allowed to ask questions more than once.'
+      ]},
+      { heading: 'Include your own recovery', body: [
+        'Mention your sleep, pain, mood, anxiety, feeding concerns, or practical barriers to getting care. Your wellbeing is part of the conversation too. If you are worried you may not remember everything, consider bringing a trusted person, if that is comfortable for you.'
+      ]}
+    ],
+    note: 'For urgent or severe symptoms, do not wait for a routine appointment. Contact your healthcare team promptly or use local emergency services when appropriate.'
+  },
+  {
+    ...DISCOVER_ARTICLE_META,
+    id: 'shared-load', category: 'For you', emoji: '🧩', title: 'Make the mental load visible',
+    subtitle: 'A fair handover covers remembering, planning, and finishing, not just doing.', color: '#F0EAF5', readTime: '3 min read',
+    sections: [
+      { heading: 'Name the whole task', body: [
+        '“Can you help with the baby?” can leave one person still responsible for deciding what needs doing. Instead, hand over a complete task: check the supplies, make the list, buy what is missing, and put it away; or plan dinner, prepare it, and clean up afterward.',
+        'Choose a handover that fits what each person can realistically do. The aim is to reduce the number of decisions one person carries, not to create a new scorecard.'
+      ]},
+      { heading: 'Agree on a clear starting point', body: [
+        'Decide who is responsible, when the task will happen, and what “done” means. For baby care, make sure everyone knows the current care plan, safe-sleep routine, and how to get help if they are worried.',
+        'A written shared list can prevent repeated conversations. Keep it short and review it together when the routine changes.'
+      ]},
+      { heading: 'Review without keeping score', body: [
+        'Once a day or week, ask: “What has been hardest, and what can we simplify?” If a plan is not working, adjust it. Recovery, work, and baby needs can change quickly, so a fair arrangement may need to change too.'
       ]}
     ]
   }
@@ -1202,14 +1355,14 @@ const [communityStatus, setCommunityStatus] = useState('');
         <View style={styles.greetingCopy}>
           <Text style={styles.eyebrow}>YOUR LITTLE SPACE</Text>
           <Text style={styles.greetingTitle}>Hi, {displayName} 🌿</Text>
-          <Text style={styles.greetingSubtitle}>You’re caring for someone tiny. You matter, too.</Text>
+          <Text style={styles.greetingSubtitle}>You’re caring for someone new. Your care matters, too.</Text>
         </View>
         <View style={styles.sunBadge}><Text style={styles.sunEmoji}>☀️</Text></View>
       </View>
 
       <View style={styles.heroCard}>
         <Text style={styles.heroEyebrow}>A MOMENT FOR YOU</Text>
-        <Text style={styles.heroTitle}>How are you feeling today?</Text>
+        <Text style={styles.heroTitle}>How are you doing today?</Text>
         <Text style={styles.heroBody}>No right or wrong answer. Just check in with yourself, if you feel like it.</Text>
         <View style={styles.moodGrid}>
           {moodOptions.map((option) => (
@@ -1263,6 +1416,27 @@ const [communityStatus, setCommunityStatus] = useState('');
         </View>
       </View>
 
+      <View style={styles.progressCard}>
+        <View style={styles.progressHeadingRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.progressEyebrow}>YOUR PACE, YOUR WAY</Text>
+            <Text style={styles.progressTitle}>Moments you’ve made space for</Text>
+          </View>
+        </View>
+        <View style={styles.progressMetrics}>
+          <View style={styles.progressMetric}>
+            <Text style={styles.progressNumber}>{checkins.length}</Text>
+            <Text style={styles.progressLabel}>recent check-ins</Text>
+          </View>
+          <View style={styles.progressDivider} />
+          <View style={styles.progressMetric}>
+            <Text style={styles.progressNumber}>{events.length}</Text>
+            <Text style={styles.progressLabel}>recent care notes</Text>
+          </View>
+          <Text style={styles.progressNote}>Every entry is optional.</Text>
+        </View>
+      </View>
+
       <View style={styles.sectionHeaderRow}>
         <Text style={styles.sectionTitle}>What would help today?</Text>
       </View>
@@ -1295,14 +1469,16 @@ const [communityStatus, setCommunityStatus] = useState('');
   const renderBaby = () => (
     <>
       <Text style={styles.eyebrow}>LITTLE ONE, BIG LOVE</Text>
-      <Text style={styles.pageTitle}>My Baby 🧸</Text>
+      <Text style={styles.pageTitle}>My Baby</Text>
       <Text style={styles.pageSubtitle}>Keep the everyday details together, without needing to remember everything.</Text>
       <View style={styles.card}>
         <Text style={styles.cardTitle}>Baby profiles</Text>
         {renderBabySelector()}
         <View style={styles.separator} />
-        <TextInput style={styles.input} placeholder="Baby’s name" placeholderTextColor="#98938E" value={babyName} onChangeText={setBabyName} />
-        <TextInput style={styles.input} placeholder="Date of birth (YYYY-MM-DD, optional)" placeholderTextColor="#98938E" value={birthDate} onChangeText={setBirthDate} autoCapitalize="none" />
+        <Text style={styles.fieldLabel}>BABY’S NAME</Text>
+        <TextInput style={styles.input} placeholder="Add a name" placeholderTextColor="#98938E" value={babyName} onChangeText={setBabyName} returnKeyType="next" />
+        <Text style={styles.fieldLabel}>DATE OF BIRTH <Text style={styles.optionalLabel}>OPTIONAL</Text></Text>
+        <TextInput style={styles.input} placeholder="YYYY-MM-DD" placeholderTextColor="#98938E" value={birthDate} onChangeText={setBirthDate} autoCapitalize="none" keyboardType="numbers-and-punctuation" />
         <TouchableOpacity style={styles.primaryButton} onPress={createBaby} disabled={saving}>
           <Text style={styles.primaryButtonText}>{saving ? 'Saving…' : 'Add baby profile'}</Text>
         </TouchableOpacity>
@@ -1312,7 +1488,8 @@ const [communityStatus, setCommunityStatus] = useState('');
         <>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>A little note about {selectedBaby.display_name}</Text>
-            <Text style={styles.mutedText}>Log feeding, sleep or diaper changes whenever it’s useful. You can keep it simple.</Text>
+            <Text style={styles.mutedText}>Choose a moment to record. You can leave the extra details blank.</Text>
+            <Text style={[styles.fieldLabel, { marginTop: 16 }]}>WHAT WOULD YOU LIKE TO LOG?</Text>
             <View style={styles.chipRow}>
               {EVENT_TYPES.map((type) => (
                 <TouchableOpacity key={type} style={[styles.chip, eventType === type && styles.chipSelected]} onPress={() => setEventType(type)}>
@@ -1333,10 +1510,10 @@ const [communityStatus, setCommunityStatus] = useState('');
                     </TouchableOpacity>
                   ))}
                 </View>
-                {feedingType !== 'breastfeeding' && <TextInput style={styles.input} placeholder="Amount in ml (optional)" placeholderTextColor="#98938E" value={amountMl} onChangeText={setAmountMl} keyboardType="decimal-pad" />}
+                {feedingType !== 'breastfeeding' && <><Text style={styles.fieldLabel}>AMOUNT <Text style={styles.optionalLabel}>OPTIONAL · ML</Text></Text><TextInput style={styles.input} placeholder="For example, 90" placeholderTextColor="#98938E" value={amountMl} onChangeText={setAmountMl} keyboardType="decimal-pad" /></>}
               </>
             )}
-            {eventType === 'sleep' && <TextInput style={styles.input} placeholder="Sleep duration in hours, e.g. 1.5" placeholderTextColor="#98938E" value={sleepStart} onChangeText={setSleepStart} keyboardType="decimal-pad" />}
+            {eventType === 'sleep' && <><Text style={styles.fieldLabel}>HOW LONG DID YOUR BABY SLEEP?</Text><TextInput style={styles.input} placeholder="Hours, for example 1.5" placeholderTextColor="#98938E" value={sleepStart} onChangeText={setSleepStart} keyboardType="decimal-pad" /></>}
             {eventType === 'diaper' && (
               <>
                 <Text style={styles.fieldLabel}>Diaper change</Text>
@@ -1353,7 +1530,7 @@ const [communityStatus, setCommunityStatus] = useState('');
             )}
             <TextInput
               style={[styles.input, styles.multiline]}
-              placeholder="Anything else you’d like to remember? (optional)"
+              placeholder="Add a detail to remember (optional)"
               placeholderTextColor="#98938E"
               value={eventDetails}
               onChangeText={setEventDetails}
@@ -1711,6 +1888,11 @@ const [communityStatus, setCommunityStatus] = useState('');
             <Text style={styles.discoverCategory}>{selectedArticle.category.toUpperCase()} · {selectedArticle.readTime.toUpperCase()}</Text>
             <Text style={styles.articleTitle}>{selectedArticle.title}</Text>
             <Text style={styles.bodyText}>{selectedArticle.subtitle}</Text>
+            <Text style={styles.articleMeta}>
+              By {selectedArticle.author} · Published {new Date(selectedArticle.publishedAt).toLocaleString(undefined, {
+                day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',
+              })}
+            </Text>
           </View>
           {selectedArticle.sections.map((section, index) => (
             <View key={`${selectedArticle.id}-${index}`} style={styles.card}>
@@ -1737,7 +1919,7 @@ const [communityStatus, setCommunityStatus] = useState('');
     return (
       <>
         <Text style={styles.eyebrow}>A LITTLE KNOWLEDGE, A LITTLE COMFORT</Text>
-        <Text style={styles.pageTitle}>Discover 🌱</Text>
+        <Text style={styles.pageTitle}>Discover</Text>
         <Text style={styles.pageSubtitle}>Practical reads for the big changes that come with a new little person. Open any guide to read at your own pace.</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categoryScroller} contentContainerStyle={styles.chipRow}>
           {(['All', 'For you', 'Baby care', 'Recovery'] as DiscoverCategory[]).map((category) => (
@@ -1752,6 +1934,11 @@ const [communityStatus, setCommunityStatus] = useState('');
             <Text style={styles.discoverCategory}>{article.category.toUpperCase()} · {article.readTime.toUpperCase()}</Text>
             <Text style={styles.discoverTitle}>{article.title}</Text>
             <Text style={styles.bodyText}>{article.subtitle}</Text>
+            <Text style={styles.articleMeta}>
+              By {article.author} · Published {new Date(article.publishedAt).toLocaleString(undefined, {
+                day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',
+              })}
+            </Text>
             <Text style={styles.articleReadLink}>Read guide  →</Text>
           </TouchableOpacity>
         ))}
@@ -1766,7 +1953,7 @@ const [communityStatus, setCommunityStatus] = useState('');
     return (
       <>
         <Text style={styles.eyebrow}>A SPACE TO BE HUMAN</Text>
-        <Text style={styles.pageTitle}>Parent Corner 🤝</Text>
+        <Text style={styles.pageTitle}>Community</Text>
         <Text style={styles.pageSubtitle}>Small wins, hard days, and honest questions. Share only what you feel comfortable sharing.</Text>
 
         {isCommunityModerator && (
@@ -1811,24 +1998,24 @@ const [communityStatus, setCommunityStatus] = useState('');
 
         <View style={styles.communityHero}>
           <Text style={styles.communityEmoji}>🌷</Text>
-          <Text style={styles.communityTitle}>You don’t have to have it all figured out.</Text>
-          <Text style={styles.bodyText}>Posts are reviewed before they appear publicly. This is a peer-support space, not an emergency service or a source of personalised medical advice.</Text>
+          <Text style={styles.communityTitle}>A place to feel understood</Text>
+          <Text style={styles.bodyText}>Share what this season is like for you, read other parents’ experiences, and take what feels helpful. Posts are reviewed before they appear publicly.</Text>
         </View>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Share with the community</Text>
-          <Text style={styles.fieldLabel}>DISPLAY NAME</Text>
+          <Text style={styles.fieldLabel}>CHOOSE A NICKNAME</Text>
           <TextInput
             style={styles.input}
             value={communityNickname}
             onChangeText={setCommunityNickname}
-            placeholder="e.g. QuietDaisy"
+            placeholder="A name you feel comfortable sharing"
             placeholderTextColor="#A49A93"
             maxLength={24}
             autoCapitalize="words"
           />
           <Text style={styles.smallText}>Use a nickname, not your full name. Your email address is not shown on posts.</Text>
-          <Text style={[styles.fieldLabel, { marginTop: 12 }]}>PICK A TOPIC</Text>
+          <Text style={[styles.fieldLabel, { marginTop: 18 }]}>WHAT’S ON YOUR MIND?</Text>
           <View style={styles.chipRow}>
             {COMMUNITY_TOPICS.map((topic) => (
               <TouchableOpacity key={topic} style={[styles.chip, communityTopic === topic && styles.chipSelected]} onPress={() => setCommunityTopic(topic)}>
@@ -1840,7 +2027,7 @@ const [communityStatus, setCommunityStatus] = useState('');
             style={[styles.input, styles.multiline, { minHeight: 120 }]}
             value={communityDraft}
             onChangeText={setCommunityDraft}
-            placeholder="What would you like other parents to know?"
+            placeholder="Write a little about what you’re experiencing. Share only what feels right."
             placeholderTextColor="#A49A93"
             multiline
             maxLength={600}
@@ -1957,39 +2144,39 @@ const [communityStatus, setCommunityStatus] = useState('');
 }
 
 const styles = StyleSheet.create({
-  appShell: { flex: 1, backgroundColor: '#FBF8F4' },
-  screen: { flex: 1, backgroundColor: '#FBF8F4' },
-  content: { paddingHorizontal: 20, paddingTop: 58, paddingBottom: 28 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#FBF8F4' },
-  authCard: { width: '100%', maxWidth: 440, backgroundColor: '#FFFFFF', borderRadius: 26, padding: 25, borderWidth: 1, borderColor: '#EFE7E0' },
-  brand: { fontSize: 30, fontWeight: '800', color: '#4E6655', letterSpacing: -1.2 },
-  brandDot: { color: '#C98F83' },
+  appShell: { flex: 1, backgroundColor: '#FAF5EE' },
+  screen: { flex: 1, backgroundColor: '#FAF5EE' },
+  content: { paddingHorizontal: 20, paddingTop: 58, paddingBottom: 32 },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#FAF5EE' },
+  authCard: { width: '100%', maxWidth: 440, backgroundColor: '#FFFCF7', borderRadius: 28, padding: 25, borderWidth: 1, borderColor: '#EDE0D2', shadowColor: '#795B45', shadowOpacity: 0.07, shadowRadius: 18, shadowOffset: { width: 0, height: 8 }, elevation: 2 },
+  brand: { fontSize: 30, fontWeight: '800', color: '#526B53', letterSpacing: -1.2 },
+  brandDot: { color: '#C17E67' },
   brandTagline: { color: '#92877F', fontSize: 12, marginTop: 1, letterSpacing: 0.3 },
   subtitle: { color: '#847B75', marginTop: 8, marginBottom: 22, lineHeight: 21 },
-  heading: { fontSize: 25, fontWeight: '700', color: '#3E4C40', marginBottom: 18 },
+  heading: { fontSize: 25, fontWeight: '700', color: '#493E35', marginBottom: 18 },
   topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30 },
   signOutButton: { borderRadius: 18, backgroundColor: '#F0EBE5', paddingHorizontal: 13, paddingVertical: 9 },
   signOutText: { color: '#746C66', fontSize: 12, fontWeight: '600' },
   eyebrow: { color: '#A27C79', fontSize: 10, fontWeight: '800', letterSpacing: 1.8, marginBottom: 8 },
   greetingRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 22 },
   greetingCopy: { flex: 1 },
-  greetingTitle: { fontSize: 29, lineHeight: 36, fontWeight: '800', color: '#3F4F42', letterSpacing: -0.8 },
+  greetingTitle: { fontSize: 29, lineHeight: 36, fontWeight: '800', color: '#493D34', letterSpacing: -0.8 },
   greetingSubtitle: { color: '#847B75', fontSize: 13, lineHeight: 20, marginTop: 7 },
-  sunBadge: { width: 58, height: 58, borderRadius: 22, backgroundColor: '#F7E8CE', alignItems: 'center', justifyContent: 'center' },
+  sunBadge: { width: 58, height: 58, borderRadius: 22, backgroundColor: '#F7DEB9', alignItems: 'center', justifyContent: 'center' },
   sunEmoji: { fontSize: 28 },
-  heroCard: { backgroundColor: '#F0EAF5', borderRadius: 25, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: '#E9DFF0' },
-  heroEyebrow: { color: '#8D779A', fontSize: 10, fontWeight: '800', letterSpacing: 1.4, marginBottom: 10 },
-  heroTitle: { color: '#45394E', fontSize: 22, lineHeight: 29, fontWeight: '800', letterSpacing: -0.4 },
-  heroBody: { color: '#766A7C', fontSize: 13, lineHeight: 20, marginTop: 8, marginBottom: 17 },
+  heroCard: { backgroundColor: '#F7E9D9', borderRadius: 26, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: '#EED9C5' },
+  heroEyebrow: { color: '#9A654E', fontSize: 10, fontWeight: '800', letterSpacing: 1.4, marginBottom: 10 },
+  heroTitle: { color: '#493C33', fontSize: 22, lineHeight: 29, fontWeight: '800', letterSpacing: -0.4 },
+  heroBody: { color: '#75645A', fontSize: 13, lineHeight: 20, marginTop: 8, marginBottom: 17 },
   moodGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 7, marginBottom: 16 },
-  moodOption: { flexGrow: 1, flexBasis: '29%', minHeight: 82, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5, paddingVertical: 10, borderRadius: 15, backgroundColor: '#FBF9FC', borderWidth: 1, borderColor: '#F3EDF6' },
-  moodOptionSelected: { borderColor: '#A995BB', backgroundColor: '#E4D9EF' },
+  moodOption: { flexGrow: 1, flexBasis: '29%', minHeight: 82, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 5, paddingVertical: 10, borderRadius: 17, backgroundColor: '#FFFAF4', borderWidth: 1, borderColor: '#F0E3D6' },
+  moodOptionSelected: { borderColor: '#C17E67', backgroundColor: '#F2D7C6' },
   moodEmoji: { fontSize: 25, marginBottom: 5 },
-  moodLabel: { color: '#776C7D', fontSize: 10, textAlign: 'center', lineHeight: 14 },
-  moodLabelSelected: { color: '#4E405C', fontWeight: '700' },
-  checkinDetails: { borderTopWidth: 1, borderTopColor: '#DED3E7', paddingTop: 16, marginTop: 2 },
-  selfCareCard: { flexDirection: 'row', gap: 13, backgroundColor: '#FFFFFF', borderRadius: 21, padding: 17, marginBottom: 27, borderWidth: 1, borderColor: '#EFE8E1' },
-  sectionIcon: { width: 43, height: 43, borderRadius: 15, backgroundColor: '#F9EBDD', alignItems: 'center', justifyContent: 'center' },
+  moodLabel: { color: '#76695F', fontSize: 10, textAlign: 'center', lineHeight: 14 },
+  moodLabelSelected: { color: '#543F35', fontWeight: '700' },
+  checkinDetails: { borderTopWidth: 1, borderTopColor: '#E5CDBA', paddingTop: 18, marginTop: 4 },
+  selfCareCard: { flexDirection: 'row', gap: 13, backgroundColor: '#FFFCF7', borderRadius: 22, padding: 17, marginBottom: 16, borderWidth: 1, borderColor: '#EDE0D2' },
+  sectionIcon: { width: 43, height: 43, borderRadius: 15, backgroundColor: '#F7E4CB', alignItems: 'center', justifyContent: 'center' },
   sectionEmoji: { fontSize: 22 },
   featureCopy: { flex: 1 },
   featureTitle: { fontSize: 15, fontWeight: '800', color: '#4B554A', marginBottom: 5 },
@@ -1997,32 +2184,33 @@ const styles = StyleSheet.create({
   sectionHeaderRow: { marginBottom: 13 },
   sectionTitle: { fontSize: 19, fontWeight: '800', color: '#455345', letterSpacing: -0.3 },
   shortcutGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 11 },
-  shortcutCard: { width: '48%', flexGrow: 1, minHeight: 145, backgroundColor: '#FFFFFF', borderRadius: 18, borderWidth: 1, borderColor: '#EFE8E1', padding: 15 },
+  shortcutCard: { width: '48%', flexGrow: 1, minHeight: 145, backgroundColor: '#FFFCF7', borderRadius: 21, borderWidth: 1, borderColor: '#EDE0D2', padding: 16, shadowColor: '#795B45', shadowOpacity: 0.04, shadowRadius: 8, shadowOffset: { width: 0, height: 4 }, elevation: 1 },
   shortcutEmoji: { fontSize: 25, marginBottom: 12 },
   shortcutTitle: { color: '#4A554A', fontSize: 13, fontWeight: '800', marginBottom: 5 },
   shortcutDescription: { color: '#91877F', fontSize: 11, lineHeight: 16 },
   closingNote: { color: '#9B829A', textAlign: 'center', fontSize: 12, lineHeight: 19, marginTop: 24, marginBottom: 8 },
   pageTitle: { fontSize: 30, fontWeight: '800', color: '#3F4F42', letterSpacing: -0.7, marginBottom: 8 },
   pageSubtitle: { color: '#847B75', fontSize: 13, lineHeight: 21, marginBottom: 22 },
-  card: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 17, marginBottom: 15, borderWidth: 1, borderColor: '#EFE8E1' },
+  card: { backgroundColor: '#FFFCF7', borderRadius: 22, padding: 18, marginBottom: 15, borderWidth: 1, borderColor: '#EDE0D2', shadowColor: '#795B45', shadowOpacity: 0.035, shadowRadius: 9, shadowOffset: { width: 0, height: 4 }, elevation: 1 },
   cardTitle: { fontSize: 16, fontWeight: '800', color: '#455345', marginBottom: 12 },
   bodyText: { color: '#756E68', fontSize: 13, lineHeight: 20, marginBottom: 7 },
   mutedText: { color: '#8C837D', fontSize: 12, lineHeight: 18 },
   smallText: { color: '#A49A93', fontSize: 10, lineHeight: 15, marginTop: 5 },
-  input: { backgroundColor: '#FFFEFC', borderWidth: 1, borderColor: '#E8DED5', borderRadius: 12, padding: 13, fontSize: 14, color: '#455345', marginBottom: 11 },
-  multiline: { minHeight: 76, textAlignVertical: 'top' },
-  primaryButton: { backgroundColor: '#6F8370', borderRadius: 13, paddingVertical: 14, paddingHorizontal: 16, alignItems: 'center', marginTop: 6 },
+  input: { backgroundColor: '#FFFEFC', borderWidth: 1, borderColor: '#E3D4C5', borderRadius: 15, paddingHorizontal: 15, paddingVertical: 15, minHeight: 52, fontSize: 15, color: '#493F37', marginBottom: 14 },
+  multiline: { minHeight: 94, textAlignVertical: 'top' },
+  primaryButton: { backgroundColor: '#657D5E', borderRadius: 16, paddingVertical: 15, paddingHorizontal: 18, minHeight: 52, alignItems: 'center', justifyContent: 'center', marginTop: 7 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 13, fontWeight: '800' },
   quietButton: { alignItems: 'center', padding: 12, marginTop: 2 },
   quietButtonText: { color: '#82718D', fontSize: 12, fontWeight: '700' },
   link: { alignItems: 'center', padding: 16 },
   linkText: { color: '#718573', fontWeight: '700' },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
-  chip: { borderRadius: 20, borderWidth: 1, borderColor: '#E4D8CD', paddingVertical: 9, paddingHorizontal: 12, backgroundColor: '#FFFEFC' },
-  chipSelected: { backgroundColor: '#718573', borderColor: '#718573' },
-  chipText: { color: '#687667', fontWeight: '600', fontSize: 12 },
+  chip: { borderRadius: 20, borderWidth: 1, borderColor: '#E5D6C7', paddingVertical: 11, paddingHorizontal: 14, backgroundColor: '#FFFEFC', minHeight: 42, justifyContent: 'center' },
+  chipSelected: { backgroundColor: '#657D5E', borderColor: '#657D5E' },
+  chipText: { color: '#665D54', fontWeight: '600', fontSize: 12 },
   chipTextSelected: { color: '#FFFFFF' },
-  fieldLabel: { fontSize: 12, color: '#6D7569', fontWeight: '800', marginBottom: 9 },
+  fieldLabel: { fontSize: 11, color: '#725E4E', fontWeight: '800', letterSpacing: 0.65, marginBottom: 8 },
+  optionalLabel: { color: '#A19487', fontSize: 9, fontWeight: '700', letterSpacing: 0.4 },
   separator: { height: 1, backgroundColor: '#F0E9E2', marginVertical: 15 },
   historyRow: { flexDirection: 'row', gap: 11, paddingVertical: 12, borderTopWidth: 1, borderTopColor: '#F3EEE9' },
   historyIcon: { width: 39, height: 39, borderRadius: 14, backgroundColor: '#F6F0E9', alignItems: 'center', justifyContent: 'center' },
@@ -2050,8 +2238,9 @@ const styles = StyleSheet.create({
   trendDate: { color: '#9A9188', fontSize: 8, marginTop: 7, textAlign: 'center' },
   patternCard: { backgroundColor: '#EEF3EA', borderRadius: 20, padding: 17, marginBottom: 15, borderWidth: 1, borderColor: '#E0E9DB' },
   patternTitle: { color: '#4D654E', fontSize: 16, fontWeight: '800', marginBottom: 10 },
-  discoverCard: { borderRadius: 22, padding: 19, marginBottom: 14 },
+  discoverCard: { borderRadius: 24, padding: 21, marginBottom: 15, borderWidth: 1, borderColor: '#FFFFFF90' },
   categoryScroller: { flexGrow: 0, marginBottom: 13 },
+  articleMeta: { color: '#827A84', fontSize: 10, fontWeight: '600', lineHeight: 15, marginTop: 9 },
   articleReadLink: { color: '#6F8370', fontSize: 12, fontWeight: '800', marginTop: 7 },
   articleBackButton: { alignSelf: 'flex-start', paddingVertical: 9, paddingRight: 12, marginBottom: 10 },
   articleBackText: { color: '#6F8370', fontWeight: '800', fontSize: 13 },
@@ -2069,10 +2258,10 @@ const styles = StyleSheet.create({
   moderationApproveText: { color: '#4D6A50', fontWeight: '800', fontSize: 12 },
   moderationReject: { backgroundColor: '#F9E9E6', borderRadius: 10, paddingHorizontal: 13, paddingVertical: 9 },
   moderationRejectText: { color: '#9A514A', fontWeight: '800', fontSize: 12 },
-  communityHero: { alignItems: 'center', backgroundColor: '#F6EDE7', borderRadius: 23, padding: 24, marginBottom: 15 },
+  communityHero: { alignItems: 'center', backgroundColor: '#F2E4D8', borderRadius: 27, padding: 26, marginBottom: 16, borderWidth: 1, borderColor: '#E8D1BE' },
   communityEmoji: { fontSize: 38, marginBottom: 13 },
   communityTitle: { textAlign: 'center', color: '#55484A', fontSize: 20, lineHeight: 27, fontWeight: '800', marginBottom: 10 },
-  communityPostCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#EFE8E1' },
+  communityPostCard: { backgroundColor: '#FFFCF7', borderRadius: 22, padding: 18, marginBottom: 13, borderWidth: 1, borderColor: '#EDE0D2' },
   communityPostHeader: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
   communityAvatar: { width: 39, height: 39, borderRadius: 14, backgroundColor: '#EAF2E8', alignItems: 'center', justifyContent: 'center' },
   communityAvatarText: { fontSize: 20 },
@@ -2082,19 +2271,19 @@ const styles = StyleSheet.create({
   communityActionText: { color: '#8D6A62', fontSize: 12, fontWeight: '800', padding: 4 },
   pendingBadge: { backgroundColor: '#FFF2DC', borderRadius: 9, paddingHorizontal: 8, paddingVertical: 5 },
   pendingBadgeText: { color: '#89663D', fontSize: 10, fontWeight: '800' },
-  tabBar: { flexDirection: 'row', backgroundColor: '#FFFDFB', borderTopWidth: 1, borderTopColor: '#EEE6DE', paddingTop: 8, paddingBottom: 12, paddingHorizontal: 4 },
-  tabButton: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 51, gap: 3 },
+  tabBar: { flexDirection: 'row', backgroundColor: '#FFFCF7', borderTopWidth: 1, borderTopColor: '#E8DCCF', paddingTop: 8, paddingBottom: 12, paddingHorizontal: 4 },
+  tabButton: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 55, gap: 3 },
   tabEmoji: { fontSize: 19, opacity: 0.75 },
   tabEmojiSelected: { opacity: 1, transform: [{ scale: 1.05 }] },
   tabLabel: { fontSize: 9, color: '#9B928A', fontWeight: '600' },
-  tabLabelSelected: { color: '#607A63', fontWeight: '800' },
-  tabIndicator: { width: 17, height: 3, borderRadius: 3, backgroundColor: '#91A58E', marginTop: 1 },
+  tabLabelSelected: { color: '#526B53', fontWeight: '800' },
+  tabIndicator: { width: 22, height: 3, borderRadius: 3, backgroundColor: '#C17E67', marginTop: 1 },
   ratingSection: { marginBottom: 17 },
   ratingTitle: { fontSize: 13, fontWeight: '800', color: '#5C6659', marginBottom: 9 },
   ratingRow: { flexDirection: 'row', gap: 7 },
-  ratingButton: { flex: 1, minHeight: 42, borderWidth: 1, borderColor: '#DED5E4', borderRadius: 11, backgroundColor: '#FFFEFC', alignItems: 'center', justifyContent: 'center' },
-  ratingSelected: { backgroundColor: '#8A779D', borderColor: '#8A779D' },
-  ratingText: { color: '#796A87', fontSize: 14, fontWeight: '800' },
+  ratingButton: { flex: 1, minHeight: 48, borderWidth: 1, borderColor: '#E5D6C7', borderRadius: 14, backgroundColor: '#FFFEFC', alignItems: 'center', justifyContent: 'center' },
+  ratingSelected: { backgroundColor: '#657D5E', borderColor: '#657D5E' },
+  ratingText: { color: '#716357', fontSize: 14, fontWeight: '800' },
   ratingTextSelected: { color: '#FFFFFF' },
   scaleLabels: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 },
   scaleLabel: { fontSize: 10, color: '#948A94' },
@@ -2118,4 +2307,14 @@ const styles = StyleSheet.create({
   screeningItemText: { color: '#4D5D4D', fontSize: 13, fontWeight: '600', lineHeight: 19, marginTop: 12, marginBottom: 8 },
   crisisLabel: { color: '#455345', fontSize: 13, fontWeight: '600' },
   crisisNumber: { color: '#2F4A36', fontSize: 20, fontWeight: '800', marginTop: 2 },
+  progressCard: { backgroundColor: '#E9EFE2', borderRadius: 23, borderWidth: 1, borderColor: '#D9E3CF', padding: 17, marginBottom: 26 },
+  progressHeadingRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  progressEyebrow: { color: '#718366', fontSize: 9, fontWeight: '800', letterSpacing: 1.2, marginBottom: 5 },
+  progressTitle: { color: '#43563F', fontSize: 15, fontWeight: '800', lineHeight: 21 },
+  progressMetrics: { flexDirection: 'row', alignItems: 'center', marginTop: 16, paddingTop: 14, borderTopWidth: 1, borderTopColor: '#D4DFC9' },
+  progressMetric: { alignItems: 'center', minWidth: 67 },
+  progressNumber: { color: '#43563F', fontSize: 21, fontWeight: '800' },
+  progressLabel: { color: '#75806D', fontSize: 10, fontWeight: '700', marginTop: 2 },
+  progressDivider: { height: 31, width: 1, backgroundColor: '#D0DCC5', marginHorizontal: 13 },
+  progressNote: { flex: 1, color: '#75806D', fontSize: 10, lineHeight: 15, textAlign: 'right', marginLeft: 8 },
 });
