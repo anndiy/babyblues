@@ -409,6 +409,13 @@ const [sleepHours, setSleepHours] = useState('');
 const [checkins, setCheckins] = useState<WellbeingCheckin[]>([]);
 const [savingCheckin, setSavingCheckin] = useState(false);
 const [activeTab, setActiveTab] = useState<'space' | 'baby' | 'insights' | 'discover' | 'community'>('space');
+const [spaceMode, setSpaceMode] = useState<'haven' | 'garden' | 'nest' | 'safe'>('haven');
+const [hydrationCups, setHydrationCups] = useState(3);
+const [bloomDew, setBloomDew] = useState(140);
+const [gardenNurtured, setGardenNurtured] = useState(false);
+const [activeNestTrack, setActiveNestTrack] = useState('Womb hum & soft rain');
+const [nestSessionStarted, setNestSessionStarted] = useState(false);
+const [breathingPhase, setBreathingPhase] = useState<'Inhale' | 'Hold' | 'Release'>('Inhale');
 const [showCheckinForm, setShowCheckinForm] = useState(false);
 const [aiSharingConsent, setAiSharingConsent] = useState(false);
 const [aiConsentLoading, setAiConsentLoading] = useState(false);
@@ -1349,122 +1356,314 @@ const [communityStatus, setCommunityStatus] = useState('');
     </View>
   );
 
-  const renderSpace = () => (
-    <>
-      <View style={styles.greetingRow}>
-        <View style={styles.greetingCopy}>
-          <Text style={styles.eyebrow}>YOUR LITTLE SPACE</Text>
-          <Text style={styles.greetingTitle}>Hi, {displayName} 🌿</Text>
-          <Text style={styles.greetingSubtitle}>You’re caring for someone new. Your care matters, too.</Text>
-        </View>
-        <View style={styles.sunBadge}><Text style={styles.sunEmoji}>☀️</Text></View>
-      </View>
+  const renderSpace = () => {
+    const nestTracks = [
+      { title: 'Womb hum & soft rain', duration: '15 min', tag: 'Rain ambience', emoji: '🌧️' },
+      { title: 'Mother’s chest heartbeat', duration: '20 min', tag: 'Soft, steady rhythm', emoji: '💗' },
+      { title: 'Twilight lavender breath', duration: '5 min', tag: 'A short exhale practice', emoji: '🪻' },
+    ];
 
-      <View style={styles.heroCard}>
-        <Text style={styles.heroEyebrow}>A MOMENT FOR YOU</Text>
-        <Text style={styles.heroTitle}>How are you doing today?</Text>
-        <Text style={styles.heroBody}>No right or wrong answer. Just check in with yourself, if you feel like it.</Text>
-        <View style={styles.moodGrid}>
-          {moodOptions.map((option) => (
-            <TouchableOpacity
-              key={option.value}
-              style={[styles.moodOption, mood === option.value && styles.moodOptionSelected]}
-              onPress={() => { setMood(option.value); setShowCheckinForm(true); }}
-              accessibilityRole="button"
-              accessibilityLabel={option.label}
-              accessibilityState={{ selected: mood === option.value }}
-            >
-              <Text style={styles.moodEmoji}>{option.emoji}</Text>
-              <Text style={[styles.moodLabel, mood === option.value && styles.moodLabelSelected]}>{option.label}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        {showCheckinForm ? (
-          <View style={styles.checkinDetails}>
-            <Text style={styles.cardTitle}>A little more, only if you want</Text>
-            {renderScale('How stressful has today felt?', 'Not much', 'A lot', stress, setStress)}
-            {renderScale('How’s your energy?', 'Running low', 'Full of energy', energy, setEnergy)}
-            {renderScale('How’s eating been?', 'Hard today', 'Going okay', appetite, setAppetite)}
-            <TextInput
-              style={styles.input}
-              placeholder="Hours of sleep in the last 24 hours (optional)"
-              placeholderTextColor="#98938E"
-              value={sleepHours}
-              onChangeText={setSleepHours}
-              keyboardType="decimal-pad"
-            />
-            <TouchableOpacity style={styles.primaryButton} onPress={saveCheckin} disabled={savingCheckin}>
-              <Text style={styles.primaryButtonText}>{savingCheckin ? 'Saving…' : 'Save my check-in'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quietButton} onPress={() => setShowCheckinForm(false)}>
-              <Text style={styles.quietButtonText}>Maybe later</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity style={styles.primaryButton} onPress={() => setShowCheckinForm(true)}>
-            <Text style={styles.primaryButtonText}>Take a moment for myself</Text>
+    if (spaceMode === 'garden') {
+      const flowers = [
+        { name: 'Chamomile of Stillness', stage: 'Full bloom', age: 'A reminder to pause', emoji: '🌼', background: '#FFF4D5' },
+        { name: 'Sweet Lavender', stage: 'Budding', age: 'Growing at your pace', emoji: '🪻', background: '#F0E8FA' },
+        { name: 'Sage of Self-Kindness', stage: 'Sprout', age: 'Small care still counts', emoji: '🌱', background: '#E8F3E9' },
+      ];
+      return (
+        <>
+          <TouchableOpacity style={styles.backButton} onPress={() => setSpaceMode('haven')}>
+            <Text style={styles.backButtonText}>‹  Back to Haven</Text>
           </TouchableOpacity>
-        )}
-      </View>
+          <Text style={styles.eyebrow}>THE BLOOM SANCTUARY</Text>
+          <Text style={styles.pageTitle}>Your recovery meadow 🌿</Text>
+          <Text style={styles.pageSubtitle}>This is a little place to notice your care, not to measure your worth. Nothing withers if you need to rest.</Text>
 
-      <View style={styles.selfCareCard}>
-        <View style={styles.sectionIcon}><Text style={styles.sectionEmoji}>☕</Text></View>
-        <View style={styles.featureCopy}>
-          <Text style={styles.featureTitle}>A tiny reminder</Text>
-          <Text style={styles.bodyText}>Have you had a sip of water, a bite to eat, or a moment to sit down today?</Text>
-          <Text style={styles.featureFootnote}>Small things count. You count, too.</Text>
+          <View style={styles.gardenHero}>
+            <View style={styles.gardenHeroTop}>
+              <Text style={styles.gardenEyebrow}>A GARDEN WITH GRACE</Text>
+              <View style={styles.dewBadge}><Text style={styles.dewBadgeText}>💧 {bloomDew} dew</Text></View>
+            </View>
+            <Text style={styles.gardenTitle}>Things can grow slowly.</Text>
+            <Text style={styles.bodyText}>A sip of water, a nap, asking someone to take over, or simply getting through a difficult hour can count as care.</Text>
+            <TouchableOpacity
+              style={[styles.gardenAction, gardenNurtured && styles.gardenActionDone]}
+              disabled={gardenNurtured}
+              onPress={() => { setBloomDew((value) => value + 25); setGardenNurtured(true); }}
+            >
+              <Text style={[styles.gardenActionText, gardenNurtured && styles.gardenActionTextDone]}>{gardenNurtured ? '✓ Meadow nurtured this visit' : '☁️  Nurture your meadow  ·  +25 dew'}</Text>
+            </TouchableOpacity>
+            <Text style={styles.smallText}>Garden points are just for play. They do not measure recovery or mental health.</Text>
+          </View>
+
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Grown through self-kindness</Text>
+            <Text style={styles.mutedText}>3 blooms</Text>
+          </View>
+          {flowers.map((flower, index) => (
+            <View key={flower.name} style={styles.flowerCard}>
+              <View style={[styles.flowerIcon, { backgroundColor: flower.background }]}><Text style={styles.flowerEmoji}>{flower.emoji}</Text></View>
+              <View style={styles.flowerCopy}>
+                <Text style={styles.flowerName}>{flower.name}</Text>
+                <Text style={styles.smallText}>{flower.age}</Text>
+                <View style={styles.flowerStage}><Text style={styles.flowerStageText}>{flower.stage}</Text></View>
+              </View>
+              <Text style={styles.flowerTier}>Tier {index + 1}</Text>
+            </View>
+          ))}
+
+          <View style={styles.graceCard}>
+            <Text style={styles.featureTitle}>🫖  Grace Day rule</Text>
+            <Text style={styles.bodyText}>There are no broken streaks here. If today is a day for feeding, resting, or asking for help, your meadow can wait. Rest counts as progress.</Text>
+          </View>
+        </>
+      );
+    }
+
+    if (spaceMode === 'nest') {
+      return (
+        <>
+          <TouchableOpacity style={styles.backButton} onPress={() => setSpaceMode('haven')}>
+            <Text style={styles.backButtonText}>‹  Back to Haven</Text>
+          </TouchableOpacity>
+          <Text style={styles.eyebrow}>A QUIETER CORNER</Text>
+          <Text style={styles.pageTitle}>Audio Nest 🎧</Text>
+          <Text style={styles.pageSubtitle}>A small pause for your body. Keep your eyes open, change position, or stop whenever you need to.</Text>
+
+          <View style={styles.nestHero}>
+            <Text style={styles.nestEyebrow}>GENTLE RESET · 3 MINUTES</Text>
+            <View style={styles.nestOrb}><Text style={styles.nestOrbEmoji}>{nestSessionStarted ? '🌬️' : '🌊'}</Text></View>
+            <Text style={styles.nestTitle}>{activeNestTrack}</Text>
+            <Text style={styles.nestDescription}>{nestSessionStarted ? `Try a comfortable breath. The current cue is: ${breathingPhase.toLowerCase()}.` : 'Unclench your jaw if you want to. Let your shoulders settle only if it feels comfortable.'}</Text>
+            <TouchableOpacity style={styles.nestPlayButton} onPress={() => setNestSessionStarted((value) => !value)}>
+              <Text style={styles.nestPlayButtonText}>{nestSessionStarted ? 'Pause breathing practice' : 'Begin breathing practice'}</Text>
+            </TouchableOpacity>
+            {nestSessionStarted && (
+              <View style={styles.breathingSteps}>
+                {(['Inhale', 'Hold', 'Release'] as const).map((phase) => (
+                  <TouchableOpacity key={phase} style={[styles.breathingStep, breathingPhase === phase && styles.breathingStepActive]} onPress={() => setBreathingPhase(phase)}>
+                    <Text style={[styles.breathingStepText, breathingPhase === phase && styles.breathingStepTextActive]}>{phase}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>Choose a soundscape</Text>
+            {nestTracks.map((track) => (
+              <TouchableOpacity key={track.title} style={[styles.trackRow, activeNestTrack === track.title && styles.trackRowSelected]} onPress={() => { setActiveNestTrack(track.title); setNestSessionStarted(false); }}>
+                <View style={styles.trackEmojiBox}><Text style={styles.trackEmoji}>{track.emoji}</Text></View>
+                <View style={styles.trackCopy}>
+                  <Text style={styles.trackTitle}>{track.title}</Text>
+                  <Text style={styles.mutedText}>{track.tag} · {track.duration}</Text>
+                </View>
+                <Text style={styles.trackSelect}>{activeNestTrack === track.title ? 'Selected' : 'Choose'}</Text>
+              </TouchableOpacity>
+            ))}
+            <Text style={styles.smallText}>Audio playback is not connected in this build. The soundscape list is a UI preview; the guided breathing controls work without audio.</Text>
+          </View>
+        </>
+      );
+    }
+
+    if (spaceMode === 'safe') {
+      return (
+        <>
+          <TouchableOpacity style={styles.backButton} onPress={() => setSpaceMode('haven')}>
+            <Text style={styles.backButtonText}>‹  Back to Haven</Text>
+          </TouchableOpacity>
+          <Text style={styles.eyebrow}>SUPPORT WITHOUT JUDGEMENT</Text>
+          <Text style={styles.pageTitle}>Safe Harbor 🛟</Text>
+          <Text style={styles.pageSubtitle}>You deserve human support, whether this is a hard hour or something more urgent.</Text>
+
+          <View style={styles.safeIntroCard}>
+            <Text style={styles.safeIntroTitle}>You do not have to handle this alone.</Text>
+            <Text style={styles.bodyText}>Unexpected tears, anxiety, numbness, or intrusive thoughts can be frightening. You are not a bad parent for needing help. A qualified professional can help you work out what is happening.</Text>
+          </View>
+
+          <View style={[styles.card, styles.crisisCard]}>
+            <Text style={styles.cardTitle}>Immediate human support · India</Text>
+            <Text style={styles.bodyText}>BabyBlues is not monitored in real time. If you or your baby may be in immediate danger, call emergency services now.</Text>
+            {renderCrisisContacts([STATIC_CRISIS_RESOURCES_IN.emergency, ...STATIC_CRISIS_RESOURCES_IN.support])}
+          </View>
+
+          <View style={styles.groundingCard}>
+            <Text style={styles.groundingEyebrow}>A SMALL GROUNDING PAUSE</Text>
+            <View style={styles.groundingOrb}><Text style={styles.groundingPhase}>{breathingPhase}</Text></View>
+            <Text style={styles.bodyText}>Choose a gentle cue at your own pace. Do not force deep breaths or hold your breath if it feels uncomfortable.</Text>
+            <View style={styles.breathingSteps}>
+              {(['Inhale', 'Hold', 'Release'] as const).map((phase) => (
+                <TouchableOpacity key={phase} style={[styles.breathingStep, breathingPhase === phase && styles.breathingStepActive]} onPress={() => setBreathingPhase(phase)}>
+                  <Text style={[styles.breathingStepText, breathingPhase === phase && styles.breathingStepTextActive]}>{phase}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          <Text style={styles.smallText}>This page is a support guide, not emergency monitoring or a substitute for clinical care.</Text>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <View style={styles.greetingRow}>
+          <View style={styles.greetingCopy}>
+            <Text style={styles.eyebrow}>YOUR LITTLE SPACE</Text>
+            <Text style={styles.greetingTitle}>Hi, {displayName} 🌿</Text>
+            <Text style={styles.greetingSubtitle}>You’re caring for someone new. Your care matters, too.</Text>
+          </View>
+          <View style={styles.sunBadge}><Text style={styles.sunEmoji}>☀️</Text></View>
         </View>
-      </View>
 
-      <View style={styles.progressCard}>
-        <View style={styles.progressHeadingRow}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.progressEyebrow}>YOUR PACE, YOUR WAY</Text>
-            <Text style={styles.progressTitle}>Moments you’ve made space for</Text>
+        <View style={styles.heroCard}>
+          <Text style={styles.heroEyebrow}>A MOMENT FOR YOU</Text>
+          <Text style={styles.heroTitle}>How does your body feel right now?</Text>
+          <Text style={styles.heroBody}>No right answers. Heavy or light, all of it is welcome.</Text>
+          <View style={styles.moodGrid}>
+            {moodOptions.map((option) => (
+              <TouchableOpacity
+                key={option.value}
+                style={[styles.moodOption, mood === option.value && styles.moodOptionSelected]}
+                onPress={() => { setMood(option.value); setShowCheckinForm(true); }}
+                accessibilityRole="button"
+                accessibilityLabel={option.label}
+                accessibilityState={{ selected: mood === option.value }}
+              >
+                <Text style={styles.moodEmoji}>{option.emoji}</Text>
+                <Text style={[styles.moodLabel, mood === option.value && styles.moodLabelSelected]}>{option.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {showCheckinForm ? (
+            <View style={styles.checkinDetails}>
+              <Text style={styles.cardTitle}>A little more, only if you want</Text>
+              {renderScale('How stressful has today felt?', 'Not much', 'A lot', stress, setStress)}
+              {renderScale('How’s your energy?', 'Running low', 'Full of energy', energy, setEnergy)}
+              {renderScale('How’s eating been?', 'Hard today', 'Going okay', appetite, setAppetite)}
+              <TextInput
+                style={styles.input}
+                placeholder="Hours of sleep in the last 24 hours (optional)"
+                placeholderTextColor="#98938E"
+                value={sleepHours}
+                onChangeText={setSleepHours}
+                keyboardType="decimal-pad"
+              />
+              <TouchableOpacity style={styles.primaryButton} onPress={saveCheckin} disabled={savingCheckin}>
+                <Text style={styles.primaryButtonText}>{savingCheckin ? 'Saving…' : 'Save my check-in'}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.quietButton} onPress={() => setShowCheckinForm(false)}>
+                <Text style={styles.quietButtonText}>Maybe later</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity style={styles.primaryButton} onPress={() => setShowCheckinForm(true)}>
+              <Text style={styles.primaryButtonText}>Take a moment for myself</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={styles.selfCareCard}>
+          <View style={styles.sectionIcon}><Text style={styles.sectionEmoji}>☕</Text></View>
+          <View style={styles.featureCopy}>
+            <Text style={styles.featureTitle}>Grace Day rule is active</Text>
+            <Text style={styles.bodyText}>If today is hard, your progress does not disappear. Rest, feeding on demand, and asking someone to take over count as real work.</Text>
+            <Text style={styles.featureFootnote}>You do not have to earn a break.</Text>
           </View>
         </View>
-        <View style={styles.progressMetrics}>
-          <View style={styles.progressMetric}>
-            <Text style={styles.progressNumber}>{checkins.length}</Text>
-            <Text style={styles.progressLabel}>recent check-ins</Text>
-          </View>
-          <View style={styles.progressDivider} />
-          <View style={styles.progressMetric}>
-            <Text style={styles.progressNumber}>{events.length}</Text>
-            <Text style={styles.progressLabel}>recent care notes</Text>
-          </View>
-          <Text style={styles.progressNote}>Every entry is optional.</Text>
-        </View>
-      </View>
 
-      <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>What would help today?</Text>
-      </View>
-      <View style={styles.shortcutGrid}>
-        <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('baby')}>
-          <Text style={styles.shortcutEmoji}>🧸</Text>
-          <Text style={styles.shortcutTitle}>Baby care</Text>
-          <Text style={styles.shortcutDescription}>Keep the little details in one place</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('discover')}>
-          <Text style={styles.shortcutEmoji}>🌱</Text>
-          <Text style={styles.shortcutTitle}>Find a little help</Text>
-          <Text style={styles.shortcutDescription}>Tips for rest, stress and new-parent life</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('insights')}>
-          <Text style={styles.shortcutEmoji}>💛</Text>
-          <Text style={styles.shortcutTitle}>My reflections</Text>
-          <Text style={styles.shortcutDescription}>Look back at your check-ins</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('community')}>
-          <Text style={styles.shortcutEmoji}>🤝</Text>
-          <Text style={styles.shortcutTitle}>Parent corner</Text>
-          <Text style={styles.shortcutDescription}>A space for shared experiences</Text>
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.closingNote}>You don’t have to do everything today. One moment at a time. 💜</Text>
-    </>
-  );
+        <View style={styles.questSection}>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>Soft quests</Text>
+            <Text style={styles.questDewPill}>+40 Bloom Dew</Text>
+          </View>
+          <View style={styles.questRow}>
+            <View style={[styles.questIcon, { backgroundColor: '#EAF2F8' }]}><Text style={styles.questEmoji}>💧</Text></View>
+            <View style={styles.questCopy}>
+              <Text style={styles.questTitle}>Sip water or tea</Text>
+              <Text style={styles.questSubtitle}>{Math.min(hydrationCups, 6)} of 6 cups noted · just a gentle reminder</Text>
+            </View>
+            <TouchableOpacity style={styles.questButton} disabled={hydrationCups >= 6} onPress={() => setHydrationCups((value) => Math.min(value + 1, 6))}>
+              <Text style={styles.questButtonText}>{hydrationCups >= 6 ? 'Done' : '+1 cup'}</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity style={styles.questRow} onPress={() => setSpaceMode('nest')}>
+            <View style={[styles.questIcon, { backgroundColor: '#EAF3EB' }]}><Text style={styles.questEmoji}>🎧</Text></View>
+            <View style={styles.questCopy}>
+              <Text style={styles.questTitle}>Take a two-minute pause</Text>
+              <Text style={styles.questSubtitle}>Breathing practice, no perfect silence needed</Text>
+            </View>
+            <Text style={styles.questChevron}>›</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.questRow, styles.questRowHighlighted]} onPress={() => { setActiveTab('insights'); setScreeningResult(null); setScreeningOpen(true); }}>
+            <View style={[styles.questIcon, { backgroundColor: '#E07A5F' }]}><Text style={styles.questEmoji}>✨</Text></View>
+            <View style={styles.questCopy}>
+              <Text style={styles.questTitle}>Gentle wellbeing screen</Text>
+              <Text style={styles.questSubtitle}>Optional PHQ-9 · about two minutes · not a diagnosis</Text>
+            </View>
+            <Text style={styles.questButtonText}>Start</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.sectionHeaderRow}>
+          <Text style={styles.sectionTitle}>Your small-care corner</Text>
+        </View>
+        <View style={styles.shortcutGrid}>
+          <TouchableOpacity style={styles.shortcutCard} onPress={() => setSpaceMode('garden')}>
+            <Text style={styles.shortcutEmoji}>🌼</Text>
+            <Text style={styles.shortcutTitle}>Bloom Garden</Text>
+            <Text style={styles.shortcutDescription}>Nurture a meadow, never a streak.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.shortcutCard} onPress={() => setSpaceMode('nest')}>
+            <Text style={styles.shortcutEmoji}>🎧</Text>
+            <Text style={styles.shortcutTitle}>Audio Nest</Text>
+            <Text style={styles.shortcutDescription}>Find a slower moment for yourself.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.shortcutCard} onPress={() => setSpaceMode('safe')}>
+            <Text style={styles.shortcutEmoji}>🛟</Text>
+            <Text style={styles.shortcutTitle}>Safe Harbor</Text>
+            <Text style={styles.shortcutDescription}>Trusted support when things feel heavy.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('baby')}>
+            <Text style={styles.shortcutEmoji}>🧸</Text>
+            <Text style={styles.shortcutTitle}>Baby care</Text>
+            <Text style={styles.shortcutDescription}>Keep feeding, sleep and diaper notes together.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('discover')}>
+            <Text style={styles.shortcutEmoji}>📖</Text>
+            <Text style={styles.shortcutTitle}>Discover</Text>
+            <Text style={styles.shortcutDescription}>Practical reads for rest and new-parent life.</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.shortcutCard} onPress={() => setActiveTab('community')}>
+            <Text style={styles.shortcutEmoji}>🤝</Text>
+            <Text style={styles.shortcutTitle}>Parent corner</Text>
+            <Text style={styles.shortcutDescription}>Read and share reviewed community posts.</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.progressCard}>
+          <View style={styles.progressHeadingRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.progressEyebrow}>YOUR PACE, YOUR WAY</Text>
+              <Text style={styles.progressTitle}>Moments you’ve made space for</Text>
+            </View>
+          </View>
+          <View style={styles.progressMetrics}>
+            <View style={styles.progressMetric}>
+              <Text style={styles.progressNumber}>{checkins.length}</Text>
+              <Text style={styles.progressLabel}>recent check-ins</Text>
+            </View>
+            <View style={styles.progressDivider} />
+            <View style={styles.progressMetric}>
+              <Text style={styles.progressNumber}>{events.length}</Text>
+              <Text style={styles.progressLabel}>recent care notes</Text>
+            </View>
+            <Text style={styles.progressNote}>Every entry is optional.</Text>
+          </View>
+        </View>
+        <Text style={styles.closingNote}>You don’t have to do everything today. One moment at a time. 💙</Text>
+      </>
+    );
+  };
 
   const renderBaby = () => (
     <>
@@ -2085,7 +2284,7 @@ const [communityStatus, setCommunityStatus] = useState('');
   };
 
   const tabItems = [
-    { key: 'space' as const, label: 'My Space', emoji: '🌿' },
+    { key: 'space' as const, label: 'Haven', emoji: '🌿' },
     { key: 'baby' as const, label: 'My Baby', emoji: '🧸' },
     { key: 'discover' as const, label: 'Discover', emoji: '🌱' },
     { key: 'insights' as const, label: 'Reflections', emoji: '💛' },
@@ -2127,7 +2326,7 @@ const [communityStatus, setCommunityStatus] = useState('');
             <TouchableOpacity
               key={tab.key}
               style={styles.tabButton}
-              onPress={() => setActiveTab(tab.key)}
+              onPress={() => { setActiveTab(tab.key); if (tab.key === 'space') setSpaceMode('haven'); }}
               accessibilityRole="button"
               accessibilityLabel={tab.label}
               accessibilityState={{ selected }}
@@ -2290,6 +2489,65 @@ const styles = StyleSheet.create({
   status: { color: '#8D6A62', backgroundColor: '#F8EDE7', padding: 12, borderRadius: 11, marginVertical: 12, lineHeight: 19, fontSize: 12 },
   footer: { color: '#AAA098', fontSize: 10, lineHeight: 16, textAlign: 'center', marginTop: 22, marginBottom: 10 },
 
+  backButton: { alignSelf: 'flex-start', paddingVertical: 8, paddingRight: 14, marginBottom: 9 },
+  backButtonText: { color: '#C06248', fontSize: 13, fontWeight: '800' },
+  questSection: { marginBottom: 22 },
+  questDewPill: { color: '#3D7254', backgroundColor: '#E8F2EC', overflow: 'hidden', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 5, fontSize: 10, fontWeight: '800' },
+  questRow: { flexDirection: 'row', alignItems: 'center', gap: 11, backgroundColor: '#FFFCF7', borderWidth: 1, borderColor: '#EDE0D2', borderRadius: 19, padding: 12, marginBottom: 9, minHeight: 76 },
+  questRowHighlighted: { backgroundColor: '#FDF0E9', borderColor: '#F0D5C7' },
+  questIcon: { width: 42, height: 42, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
+  questEmoji: { fontSize: 20 },
+  questCopy: { flex: 1 },
+  questTitle: { color: '#453B35', fontSize: 12, fontWeight: '800', marginBottom: 4 },
+  questSubtitle: { color: '#897D74', fontSize: 10, lineHeight: 15 },
+  questButton: { paddingHorizontal: 10, paddingVertical: 8, borderRadius: 11, backgroundColor: '#FAF0E9', borderWidth: 1, borderColor: '#E8D4C8' },
+  questButtonText: { color: '#A64E35', fontSize: 11, fontWeight: '800' },
+  questChevron: { color: '#C4B7AF', fontSize: 24, paddingHorizontal: 4 },
+  gardenHero: { backgroundColor: '#EDF5EF', borderColor: '#D5EADB', borderWidth: 1, borderRadius: 26, padding: 19, marginBottom: 22 },
+  gardenHeroTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, gap: 8 },
+  gardenEyebrow: { color: '#396B4D', fontSize: 9, fontWeight: '800', letterSpacing: 1.1 },
+  dewBadge: { backgroundColor: '#FFFFFF', borderColor: '#D0E5D7', borderWidth: 1, borderRadius: 18, paddingHorizontal: 10, paddingVertical: 6 },
+  dewBadgeText: { color: '#2A5C3D', fontSize: 11, fontWeight: '800' },
+  gardenTitle: { color: '#264432', fontSize: 22, lineHeight: 28, fontWeight: '800', marginBottom: 8 },
+  gardenAction: { backgroundColor: '#3D7254', borderRadius: 15, paddingVertical: 13, paddingHorizontal: 12, alignItems: 'center', marginTop: 7 },
+  gardenActionDone: { backgroundColor: '#DDEBE1' },
+  gardenActionText: { color: '#FFFFFF', fontSize: 12, fontWeight: '800' },
+  gardenActionTextDone: { color: '#4D755C' },
+  flowerCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#FFFCF7', borderWidth: 1, borderColor: '#EBE1D8', borderRadius: 20, padding: 13, marginBottom: 10, gap: 12 },
+  flowerIcon: { width: 54, height: 54, borderRadius: 17, alignItems: 'center', justifyContent: 'center' },
+  flowerEmoji: { fontSize: 27 },
+  flowerCopy: { flex: 1 },
+  flowerName: { color: '#35312E', fontSize: 12, fontWeight: '800', marginBottom: 2 },
+  flowerStage: { alignSelf: 'flex-start', backgroundColor: '#F5ECE5', borderRadius: 9, paddingHorizontal: 8, paddingVertical: 4, marginTop: 5 },
+  flowerStageText: { color: '#93523B', fontSize: 9, fontWeight: '800' },
+  flowerTier: { color: '#7C7068', fontSize: 10, fontWeight: '700' },
+  graceCard: { backgroundColor: '#FCF9F5', borderWidth: 1, borderColor: '#ECE2D8', borderRadius: 20, padding: 16, marginTop: 8, marginBottom: 12 },
+  nestHero: { backgroundColor: '#1C2C36', borderColor: '#34444D', borderWidth: 1, borderRadius: 27, padding: 22, marginBottom: 18, alignItems: 'center' },
+  nestEyebrow: { color: '#A2D2FF', fontSize: 9, fontWeight: '800', letterSpacing: 1.2, alignSelf: 'flex-start' },
+  nestOrb: { width: 112, height: 112, borderRadius: 56, backgroundColor: '#35515C', borderWidth: 1, borderColor: '#71909A', alignItems: 'center', justifyContent: 'center', marginTop: 22, marginBottom: 18 },
+  nestOrbEmoji: { fontSize: 43 },
+  nestTitle: { color: '#FFFFFF', fontSize: 18, fontWeight: '800', textAlign: 'center', marginBottom: 7 },
+  nestDescription: { color: '#CFD8DC', fontSize: 12, lineHeight: 19, textAlign: 'center', marginBottom: 17 },
+  nestPlayButton: { backgroundColor: '#E07A5F', borderRadius: 17, paddingHorizontal: 18, paddingVertical: 13, minWidth: '75%', alignItems: 'center' },
+  nestPlayButtonText: { color: '#FFFFFF', fontSize: 12, fontWeight: '800' },
+  breathingSteps: { flexDirection: 'row', justifyContent: 'center', gap: 8, marginTop: 15 },
+  breathingStep: { backgroundColor: '#FFFFFF', borderColor: '#E6DCD1', borderWidth: 1, paddingVertical: 8, paddingHorizontal: 13, borderRadius: 20 },
+  breathingStepActive: { backgroundColor: '#3D5A46', borderColor: '#3D5A46' },
+  breathingStepText: { color: '#736358', fontSize: 11, fontWeight: '700' },
+  breathingStepTextActive: { color: '#FFFFFF' },
+  trackRow: { flexDirection: 'row', alignItems: 'center', gap: 11, paddingVertical: 11, borderTopWidth: 1, borderTopColor: '#F3EEE9' },
+  trackRowSelected: { backgroundColor: '#F2F8F5', borderRadius: 14, paddingHorizontal: 8, borderTopColor: '#DCEBE0' },
+  trackEmojiBox: { width: 42, height: 42, borderRadius: 14, backgroundColor: '#F1ECE5', alignItems: 'center', justifyContent: 'center' },
+  trackEmoji: { fontSize: 21 },
+  trackCopy: { flex: 1 },
+  trackTitle: { color: '#35312E', fontSize: 12, fontWeight: '800', marginBottom: 3 },
+  trackSelect: { color: '#4B8060', fontSize: 10, fontWeight: '800' },
+  safeIntroCard: { backgroundColor: '#FFF4F2', borderColor: '#FADCD7', borderWidth: 1, padding: 18, borderRadius: 22, marginBottom: 15 },
+  safeIntroTitle: { color: '#B83E2D', fontSize: 16, lineHeight: 23, fontWeight: '800', marginBottom: 9 },
+  groundingCard: { backgroundColor: '#FAF7F2', borderColor: '#EBE3D7', borderWidth: 1, borderRadius: 24, padding: 19, alignItems: 'center', marginBottom: 13 },
+  groundingEyebrow: { color: '#8C7B71', fontSize: 9, fontWeight: '800', letterSpacing: 1.2, marginBottom: 16 },
+  groundingOrb: { width: 108, height: 108, borderRadius: 54, backgroundColor: '#F4DFC8', borderWidth: 2, borderColor: '#DDB99D', alignItems: 'center', justifyContent: 'center', marginBottom: 14 },
+  groundingPhase: { color: '#6D5443', fontSize: 14, fontWeight: '800' },
   aiConsentTitle: { color: '#4E6655', fontSize: 13, fontWeight: '700', marginTop: 10, marginBottom: 10 },
   aiLoadingRow: { flexDirection: 'row', alignItems: 'center', gap: 9, paddingVertical: 10 },
   aiResultCard: { marginTop: 14, padding: 14, borderRadius: 16, backgroundColor: '#F8F5F0', borderWidth: 1, borderColor: '#E7DED4' },
