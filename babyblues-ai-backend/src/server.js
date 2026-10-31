@@ -89,7 +89,7 @@ app.post('/api/analysis/wellbeing', async (req, res) => {
     const careRows = careResult.data || [];
     const usage = extractUsagePatterns({ careLogs: careRows, now, windowDays, utcOffsetMinutes });
     const supportLevel = deriveSupportLevel({ features, usage });
-    const interpretation = await interpretFeatures(features);
+    const interpretation = await interpretFeatures(features, { supportLevel, usage });
     return res.json({
       generatedAt: new Date().toISOString(),
       windowDays,
