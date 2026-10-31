@@ -82,7 +82,7 @@ export function SupportLevelPanel({ accessToken, refreshKey }: Props) {
   const screening = data?.screening ?? null;
 
   return (
-    <section className="panel support-panel support-level-panel" aria-live="polite">
+    <section className="panel support-panel support-level-panel glass-panel border-gradient" aria-live="polite">
       <div className="panel-heading">
         <div>
           <h2>Support level</h2>
